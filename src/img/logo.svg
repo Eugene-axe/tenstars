@@ -1,0 +1,9 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>Layer 1</title>
+  <rect id="svg_2" height="41" width="69" y="268" x="289.8" stroke="#000" fill="none"/>
+  <text transform="matrix(1.86185 0 0 1.86185 -39.1105 -29.7717)" stroke="#000" font-weight="bold" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="100" id="svg_3" y="107.63055" x="21.58415" stroke-width="0" fill="#ffff56">R</text>
+  <path stroke="#ff7f00" stroke-width="6" id="svg_4" d="m77.06608,51.41742l38.07599,0l11.76578,-36.17201l11.76578,36.17201l38.07599,0l-30.80407,22.35528l11.76638,36.17201l-30.80408,-22.35589l-30.80408,22.35589l11.76639,-36.17201l-30.80408,-22.35528z" opacity="NaN" fill="#999999"/>
+ </g>
+</svg>
