@@ -7,31 +7,37 @@ const Wrapper = styled.div`
   position: fixed;
   top: 9em;
   left: 0;
+  width: 100%;
+  height: calc(100% - 9em);
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 9em);
-  width: 100%;
   background: linear-gradient(
     119deg,
     hsl(218deg 15% 80%) 30%,
     hsl(70deg 82% 91%),
     hsl(47deg 68% 75%)
   );
-  @media( max-width: 600px) {
-    position: absolute;
+  @media (max-width: 800px) {
+    top: 6em;
+    height: (100% -6em);
+  }
+  @media (max-width: 400px) {
+    flex-direction: column;
   }
 `;
 
 const CategoriesContainer = styled.div`
-  flex-basis: 12em;
+  flex: 0 0 12em;
   overflow-x: hidden;
   transition: all 0.2s ease-in;
 
   @media (max-width: 600px) {
-    width: 8em;
+    flex-basis: 8em;
   }
   @media (max-width: 400px) {
-    flex-basis: 0px;
+    flex-basis: auto;
+    width: 100%;
+    overflow-x: visible;
   }
 `;
 
@@ -40,6 +46,11 @@ const Main = styled.main`
   border-left: 1px solid black;
   flex: 1 1 auto;
   overflow-y: scroll;
+  padding-bottom: 10em;
+  @media (max-width: 400px) {
+    border-left: 0;
+    border-top: 1px solid black;
+  }
 `;
 
 const Layout = ({ children }) => {

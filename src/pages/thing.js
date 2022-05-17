@@ -22,7 +22,6 @@ const Wrapper = styled.div`
     hsl(235deg 38% 95%),
     hsl(240deg 38% 85%) 75%
   );
-  height: 100%;
   padding: 1em;
   grid-template-columns: repeat(2, minmax(350px, 1fr));
   grid-template-rows: 1fr 1fr 1fr 4fr 1fr 2em;
@@ -36,6 +35,20 @@ const Wrapper = styled.div`
     ' description  image   '
     ' footer       image   '
     'buttons       .       ';
+
+  @media (max-width: 850px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr 1fr 6fr 2fr 1fr 3fr 1em 1fr;
+    grid-template-areas:
+      ' path        '
+      ' title       '
+      ' image       '
+      ' preview     '
+      ' rating      '
+      ' description '
+      ' footer      '
+      ' buttons     ';
+  }
 `;
 
 const PathContainer = styled.div`
@@ -80,6 +93,10 @@ const RatingContainer = styled.div`
   .r-num {
     font-size: 1.4em;
   }
+
+  @media(max-width: 460px) {
+    font-size: 0.8em;
+  }
 `;
 
 const RatingStars = styled.div`
@@ -92,6 +109,7 @@ const Description = styled.div`
   border: 2px dashed black;
   border-radius: 0.5em;
   padding: 0.5em;
+  min-height: 5em;
 `;
 const Footer = styled.div`
   grid-area: footer;
@@ -110,15 +128,15 @@ const PreviewImage = styled.div`
   display: flex;
 
   .pic1 {
-    background: center / cover no-repeat url('${props =>
+    background: center / contain no-repeat url('${props =>
       props.image || defaultImg}');
   }
   .pic2 {
-    background: center / cover no-repeat url('${props =>
+    background: center / contain no-repeat url('${props =>
       props.image || defaultImg}');
   }
   .pic3 {
-    background: center / cover no-repeat url('${props =>
+    background: center / contain no-repeat url('${props =>
       props.image || defaultImg}');
   }
   & > div + div {
@@ -236,4 +254,3 @@ const ThingPage = props => {
 };
 
 export default ThingPage;
-

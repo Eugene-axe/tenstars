@@ -6,9 +6,7 @@ import { GET_THINGS } from '../client/query';
 
 import FormThing from '../components/FormThing';
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: minmax(320px, 25em);
-  grid-auto-rows: 800px;
+  
 `;
 
 const NewThing = props => {
@@ -19,7 +17,7 @@ const NewThing = props => {
     onCompleted: data => {
       props.history.push('/');
     },
-    refetchQueries: [{query : GET_THINGS}]
+    refetchQueries: [{ query: GET_THINGS }]
   });
 
   return (

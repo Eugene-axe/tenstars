@@ -3,8 +3,12 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { ButtonPositive, ButtonDanger } from './elements';
 import ButtonSecondary from './elements/ButtonSecondary';
+
 const Ul = styled.ul`
   list-style-type: none;
+  @media (max-width: 400px) {
+    display: ${props => (props.isHide ? 'none' : 'block')};
+  }
 `;
 
 const Node = styled.li`
@@ -31,7 +35,7 @@ const CategoriesFeed = props => {
   };
 
   return (
-    <Ul>
+    <Ul isHide={props.isHide}>
       {!isRoot && (
         <Node
           onClick={onBack}

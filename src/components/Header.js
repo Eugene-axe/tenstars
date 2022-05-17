@@ -10,13 +10,19 @@ const HeaderPage = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  min-width: 500px;
   width: 100%;
   height: 9em;
   display: flex;
   flex-direction: column;
   padding: 0.5em;
   background: linear-gradient(to right, hsl(218, 50%, 50%), hsl(46, 50%, 50%));
+  @media (max-width: 800px) {
+    height: 6em;
+    padding: 2px 0em;
+  }
+  @media (max-width: 400px) {
+    z-index: 10;
+  }
 `;
 
 const Cap = styled.div`
@@ -24,18 +30,29 @@ const Cap = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+  @media (max-width: 800px) {
+    font-size: 0.9em;
+    padding: 0 .5em;
+  }
 `;
 const Img = styled.img`
   height: 80px;
-   @media (max-width: 600px) {
-     height: 60px;
-   }
+  @media (max-width: 800px) {
+    height: 60px;
+  }
 `;
 const Title = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   * {
     margin: 0.2em;
+  }
+  @media (max-width: 800px) {
+    font-size: 0.8em;
+    * {
+      margin: 0;
+    }
   }
 `;
 

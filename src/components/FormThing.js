@@ -20,6 +20,11 @@ const Form = styled.form`
     hsl(46deg 50% 50%) 200%
   );
   overflow: hidden;
+  @media (max-width: 600px) {
+    width: 100%;
+    margin: 0;
+    border: 1px solid black;
+  }
 `;
 const ImageContainer = styled.div`
   flex: 1;
