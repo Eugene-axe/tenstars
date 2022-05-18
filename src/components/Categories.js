@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 
 const ButtonToggle = styled(ButtonSecondary)`
   display: none;
-  @media (max-width: 400px) {
+  @media (max-width: 450px) {
     display: block;
   }
 `;

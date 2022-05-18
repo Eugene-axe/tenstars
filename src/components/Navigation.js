@@ -5,6 +5,7 @@ import { ButtonAsLink, ButtonNegative } from './elements';
 
 const Nav = styled.nav`
   ul {
+    position: relative;
     display: flex;
     justify-content: start;
     flex-direction: row;
@@ -15,7 +16,7 @@ const Nav = styled.nav`
     padding: 0 1em;
     transition: all 2s ease;
   }
-  li .last {
+  li.last {
     margin-left: auto;
   }
   li a,
@@ -30,8 +31,7 @@ const Nav = styled.nav`
     color: hsl(40, 80%, 70%);
   }
 
-  @media (max-width: 400px),
-    screen and (max-width: 900px) and (max-height: 400px) {
+  @media (max-width: 450px) {
     position: relative;
     ul {
       display: ${props => (props.isHide ? 'none' : 'flex')};
@@ -56,7 +56,7 @@ const Nav = styled.nav`
             hsl(226deg 29% 72%)
           );
         }
-        & .last {
+        &.last {
           margin: 0;
         }
         & > * {
@@ -69,14 +69,37 @@ const Nav = styled.nav`
       }
     }
   }
+  @media (orientation: landscape) and (max-height: 450px) and (min-width: 450px) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    ul {
+      background: linear-gradient(
+        to right,
+        hsl(221deg 29% 79%),
+        hsl(226deg 29% 72%)
+      );
+      display: ${props => (props.isHide ? 'none' : 'flex')};
+      font-size: 0.8em;
+      position: absolute;
+      width: 100%;
+      top: 2px;
+      border-bottom: 1px solid black;
+    }
+  }
 `;
 
 const ButtonToggle = styled(ButtonNegative)`
   display: none;
-  @media (max-width: 400px),
-    screen and (max-width: 900px) and (max-height: 400px) {
+  @media (max-width: 450px) {
     display: block;
     width: 100%;
+  }
+  @media (orientation: landscape) and (max-height: 450px) and (min-width: 450px) {
+    align-self: center;
+    display: block;
+    margin-top: -2.2em;
+    background: transparent;
   }
 `;
 

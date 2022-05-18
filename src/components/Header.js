@@ -19,16 +19,17 @@ const HeaderPage = styled.header`
   padding-bottom: 0;
   background: linear-gradient(to right, hsl(218, 50%, 50%), hsl(46, 50%, 50%));
   @media (max-width: 800px) {
-    height: 6em;
+    height: 7em;
     padding: 2px 0em 0;
   }
-  @media (max-width: 400px) {
+  @media (max-width: 450px) {
     z-index: 10;
   }
-  @media screen and (max-width: 900px) and (max-height: 400px) {
-    width: 12em;
-    padding: 2px 0em 0;
+  @media (orientation: landscape) and (max-height: 450px) and (min-width: 450px) {
+    height: 3.5em;
+    padding: 0;
     z-index: 10;
+
   }
 `;
 
@@ -39,20 +40,16 @@ const Cap = styled.div`
   width: 100%;
   @media (max-width: 800px) {
     font-size: 0.9em;
-    padding: 0 .5em;
+    padding: 0 0.5em;
   }
-  @media screen and (max-width: 900px) and (max-height: 400px) {
-    font-size: 0.7em;
-    padding-right: 3px;
+  @media (orientation: landscape) and (max-height: 450px) and (min-width: 450px) {
+    font-size: 0.65em;
   }
 `;
 const Img = styled.img`
-  height: 80px;
+  height: 5em;
   @media (max-width: 800px) {
-    height: 60px;
-  }
-  @media screen and (max-width: 900px) and (max-height: 400px) {
-    height: 40px;
+    height: 3.75;
   }
 `;
 const Title = styled.div`
@@ -62,20 +59,15 @@ const Title = styled.div`
   * {
     margin: 0.2em;
   }
-  @media (max-width: 800px) {
-    font-size: 0.8em; 
+  @media (max-width: 450px) {
+    font-size: 0.8em;
     * {
       margin: 0;
     }
   }
-  @media screen and (max-width: 900px) and (max-height: 400px) {
-    h1{
-     text-align: end;
-    }
-    h3 {
-      width: 100%;
-      text-align: end;
-      ${'' /* display: none; */}
+  @media (orientation: landscape) and (max-height: 450px) and (min-width: 450px) {
+    * {
+      margin: 0;
     }
   }
 `;

@@ -6,7 +6,7 @@ import ButtonSecondary from './elements/ButtonSecondary';
 
 const Ul = styled.ul`
   list-style-type: none;
-  @media (max-width: 400px) {
+  @media (max-width: 450px) {
     display: ${props => (props.isHide ? 'none' : 'block')};
   }
 `;

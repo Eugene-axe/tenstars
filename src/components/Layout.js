@@ -17,16 +17,20 @@ const Wrapper = styled.div`
     hsl(70deg 82% 91%),
     hsl(47deg 68% 75%)
   );
-  @media (max-width: 800px) {
-    top: 6em;
-    height: calc(100% - 6em);
-  }
-  @media (max-width: 400px) {
+  @media (max-width: 450px) {
     flex-direction: column;
   }
-  @media screen and (max-width: 900px) and (max-height: 400px) {
-    top: 0;
-    height: 100%;
+  ${'' /* @media (max-width: 450px) and (max-height: 450px){
+    top: 7em;
+    height: calc(100% - 7em);
+  } */}
+  @media (max-width: 800px) and (min-height: 450px) , (max-width: 450px) and (max-height: 450px) {
+    top: 7em;
+    height: calc(100% - 7em);
+  }
+  @media (orientation: landscape) and (max-height: 450px) and (min-width: 450px) {
+    top: 3.5em;
+    height: calc(100% - 3.5em);
   }
 `;
 
@@ -38,14 +42,10 @@ const CategoriesContainer = styled.div`
   @media (max-width: 600px) {
     flex-basis: 8em;
   }
-  @media (max-width: 400px) {
+  @media (max-width: 450px) {
     flex-basis: auto;
     width: 100%;
     overflow-x: visible;
-  }
-  @media screen and (max-width: 900px) and (max-height: 400px) {
-    margin-top: 9em;
-    height: calc( 100% - 9em);
   }
 `;
 
