@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { ButtonPositive, ButtonNegative } from '../components/elements';
+import { ButtonPositive, ButtonNegative, InputText} from '../components/elements';
 
 const Form = styled.form`
   position: absolute;
@@ -46,6 +46,9 @@ const Field = styled.fieldset`
   }
 `;
 
+const Input = styled(InputText)`
+  background: transparent;
+`;
 const FormLogin = (props) => {
   const [values, setValues] = useState({});
 
@@ -66,7 +69,7 @@ const FormLogin = (props) => {
         <List>
           <Li>
             <label htmlFor="username">Username</label>
-            <input
+            <Input
               type="text"
               placeholder="enter username"
               id="username"
@@ -78,7 +81,7 @@ const FormLogin = (props) => {
           {props.formType === 'signup' && (
             <Li>
               <label htmlFor="name">Name</label>
-              <input
+              <Input
                 type="text"
                 placeholder="enter rname"
                 id="name"
@@ -90,7 +93,7 @@ const FormLogin = (props) => {
           )}
           <Li>
             <label htmlFor="username">Password</label>
-            <input
+            <Input
               type="password"
               placeholder="enter password"
               id="password"

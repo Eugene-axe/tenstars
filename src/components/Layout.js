@@ -19,10 +19,14 @@ const Wrapper = styled.div`
   );
   @media (max-width: 800px) {
     top: 6em;
-    height: (100% -6em);
+    height: calc(100% - 6em);
   }
   @media (max-width: 400px) {
     flex-direction: column;
+  }
+  @media screen and (max-width: 900px) and (max-height: 400px) {
+    top: 0;
+    height: 100%;
   }
 `;
 
@@ -39,6 +43,10 @@ const CategoriesContainer = styled.div`
     width: 100%;
     overflow-x: visible;
   }
+  @media screen and (max-width: 900px) and (max-height: 400px) {
+    margin-top: 9em;
+    height: calc( 100% - 9em);
+  }
 `;
 
 const Main = styled.main`
@@ -46,7 +54,7 @@ const Main = styled.main`
   border-left: 1px solid black;
   flex: 1 1 auto;
   overflow-y: scroll;
-  padding-bottom: 10em;
+  padding-bottom: 4em;
   @media (max-width: 400px) {
     border-left: 0;
     border-top: 1px solid black;

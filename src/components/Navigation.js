@@ -15,7 +15,7 @@ const Nav = styled.nav`
     padding: 0 1em;
     transition: all 2s ease;
   }
-  li:last-child {
+  li .last {
     margin-left: auto;
   }
   li a,
@@ -23,15 +23,18 @@ const Nav = styled.nav`
     text-decoration: none;
     font-size: 1.3em;
     color: hsl(40, 80%, 80%);
+    display: block;
   }
   li a:hover {
     text-decoration: underline;
     color: hsl(40, 80%, 70%);
   }
-  @media (max-width: 400px) {
+
+  @media (max-width: 400px),
+    screen and (max-width: 900px) and (max-height: 400px) {
     position: relative;
     ul {
-      display: ${props => props.isHide ? 'none' : 'flex'};
+      display: ${props => (props.isHide ? 'none' : 'flex')};
       position: absolute;
       top: 2em;
       flex-direction: column;
@@ -53,7 +56,7 @@ const Nav = styled.nav`
             hsl(226deg 29% 72%)
           );
         }
-        &:last-child {
+        & .last {
           margin: 0;
         }
         & > * {
@@ -70,7 +73,8 @@ const Nav = styled.nav`
 
 const ButtonToggle = styled(ButtonNegative)`
   display: none;
-  @media (max-width: 400px) {
+  @media (max-width: 400px),
+    screen and (max-width: 900px) and (max-height: 400px) {
     display: block;
     width: 100%;
   }
@@ -105,12 +109,12 @@ const Navigation = props => {
           <Link to="/new">New</Link>
         </li>
         {props.isLoggedIn ? (
-          <li>
+          <li className="last">
             <ButtonAsLink onClick={logOut}>Log out</ButtonAsLink>
           </li>
         ) : (
           <>
-            <li style={{ marginLeft: 'auto' }}>
+            <li className="last">
               <Link to="/signin">Sign In</Link>
             </li>
             <li>
