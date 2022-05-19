@@ -1,62 +1,48 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
+import Blink from '../loaders/animationBlink';
 
-const loading = keyframes`
-0% {
-  background: linear-gradient(
-    125deg,
-    hsl(218deg 15% 60%) 15%,
-    hsl(218deg 22% 86%) 40%,
-    hsl(218deg 15% 70%) 65%
-  )}
-  50% {
-  background: linear-gradient(
-    125deg,
-    hsl(218deg 15% 60%) 30%,
-    hsl(218deg 22% 86%) 60%,
-    hsl(218deg 15% 70%) 85%
-  )}
-  100% {
-    background: linear-gradient(
-    125deg,
-    hsl(218deg 15% 60%) 45%,
-    hsl(218deg 22% 86%) 80%,
-    hsl(218deg 15% 70%) 105%
-  );}
-`;
-
-const loading2 = keyframes`
- 0% {
-   background-position: left;
- }
- 50% {
-   background-position: center;
- }
- 100% {
-   background-position: right;
- }
-`
 
 const ButtonLoad = styled.button`
   flex: 1;
   padding: 0.6em;
   text-align: center;
   font-size: 1em;
-  color: white;
+  color: hsla(0deg 0% 100% / 0.3);
   box-shadow: 0 0 3px black;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
   outline: none;
-  transition: background 0.2s ease-in;
+  background: linear-gradient(to right, hsl(47deg 14% 75%), hsl(40deg 15% 70%));
+  overflow: hidden;
+  position: relative;
 
-  background: linear-gradient(
-    125deg,
-    hsl(218deg 15% 60%) 15%,
-    hsl(218deg 22% 86%) 40%,
-    hsl(218deg 15% 70%) 65%
-  );
-  animation: ${loading2} 1s infinite ease-in-out;
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -250px;
+    top: 0;
+    height: 100%;
+    width: 250px;
+    background: linear-gradient(
+      85deg,
+      transparent 20%,
+      hsl(180deg 12% 85% / 50%) 50%,
+      transparent 80%
+    );
+    animation: ${Blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
+  @keyframes load {
+    0% {
+      left: -150px;
+    }
+    70%,
+    100% {
+      left: 100%;
+    }
+  }
 `;
 
 export default ButtonLoad;

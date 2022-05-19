@@ -38,15 +38,15 @@ const Categories = () => {
       >
         Categories &#9776;
       </ButtonToggle>
-      {!loading ? (
+      {loading ? (
+        <LoadCategoryFeed isHide={isHide} />
+      ) : (
         <CategoriesFeed
           isHide={isHide}
           category={data.category}
           setId={setId}
           isRoot={id === basisCatId}
         />
-      ) : (
-        <LoadCategoryFeed isHide={isHide} />
       )}
     </Wrapper>
   );
