@@ -10,18 +10,23 @@ const Crumbs = props => {
   let title;
   if (loading) title = 'Loading ';
   if (error) title = 'Error ';
-  title = data?.category.title || "categories";
+  title = data?.category.title || 'categories';
   return <Link to={`/category/${props.id}`}>{`${title}`}</Link>;
 };
 
 const BreadCrumbs = props => {
   return (
     <div>
-      {props.catList.map(cat => (
-        <span key={cat}>{` / `}
-          <Crumbs id={cat} />
-        </span>
-      ))}
+      {props.catList.map(cat => {
+        return cat ? (
+          <span key={cat}>
+            {` / `}
+            <Crumbs id={cat} />
+          </span>
+        ) : (
+          ''
+        );
+      })}
     </div>
   );
 };

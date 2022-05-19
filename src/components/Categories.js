@@ -5,6 +5,7 @@ import { GET_CATEGORY } from '../client/query';
 
 import CategoriesFeed from './CategoriesFeed';
 import ButtonSecondary from './elements/ButtonSecondary';
+import LoadCategoryFeed from './loaders/loadCategoryFeed';
 
 const Wrapper = styled.div`
   overflow-x: hidden;
@@ -27,7 +28,6 @@ const Categories = () => {
   const { data, loading, error } = useQuery(GET_CATEGORY, {
     variables: { id: id }
   });
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Errorka</p>;
   return (
     <Wrapper>
@@ -38,12 +38,16 @@ const Categories = () => {
       >
         Categories &#9776;
       </ButtonToggle>
-      <CategoriesFeed
-        isHide={isHide}
-        category={data.category}
-        setId={setId}
-        isRoot={id === basisCatId}
-      />
+      {!loading ? (
+        <CategoriesFeed
+          isHide={isHide}
+          category={data.category}
+          setId={setId}
+          isRoot={id === basisCatId}
+        />
+      ) : (
+        <LoadCategoryFeed isHide={isHide} />
+      )}
     </Wrapper>
   );
 };

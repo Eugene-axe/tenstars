@@ -9,6 +9,7 @@ import ButtonNegative from './ButtonNegative';
 import ButtonPositive from './ButtonPositive';
 import ButtonPositiveMini from './ButtonPositiveMini';
 import ButtonDanger from './ButtonDanger';
+import ButtonLoad from './ButtonLoad';
 
 
 export  {
@@ -22,5 +23,6 @@ export  {
   ButtonNegative,
   ButtonPositive,
   ButtonPositiveMini,
-  ButtonDanger
+  ButtonDanger,
+  ButtonLoad
 };

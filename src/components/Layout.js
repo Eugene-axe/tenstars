@@ -20,10 +20,6 @@ const Wrapper = styled.div`
   @media (max-width: 450px) {
     flex-direction: column;
   }
-  ${'' /* @media (max-width: 450px) and (max-height: 450px){
-    top: 7em;
-    height: calc(100% - 7em);
-  } */}
   @media (max-width: 800px) and (min-height: 450px) , (max-width: 450px) and (max-height: 450px) {
     top: 7em;
     height: calc(100% - 7em);

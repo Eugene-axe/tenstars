@@ -21,7 +21,7 @@ const Vertex = styled.li`
 `;
 
 const CategoriesFeed = props => {
-  const { category, setId, isRoot } = props;
+  const { category, setId, isRoot, isHide } = props;
   const linkBack =
     category.directAncestor === process.env.CAT_ID
       ? '/'
@@ -35,7 +35,7 @@ const CategoriesFeed = props => {
   };
 
   return (
-    <Ul isHide={props.isHide}>
+    <Ul isHide={isHide}>
       {!isRoot && (
         <Node
           onClick={onBack}
