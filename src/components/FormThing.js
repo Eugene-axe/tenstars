@@ -200,7 +200,7 @@ const ThingForm = props => {
     category: props.thing?.category || [''],
     image: props.thing?.image || null
   });
-  // const [image, setImage] = useState(null);
+ 
   const [loadImage, setLoadImage] = useState(false);
   const onChange = event => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -209,9 +209,6 @@ const ThingForm = props => {
   const onImage = async event => {
     setLoadImage(true);
     const file = event.target.files[0];
-
-    // let tempPath = URL.createObjectURL(file);
-    // setImage(tempPath);
 
     let fd = new FormData();
     fd.append('image', file);

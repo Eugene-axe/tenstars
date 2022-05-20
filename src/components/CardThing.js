@@ -28,7 +28,11 @@ const ImageContainer = styled.div`
   overflow: hidden;
   box-shadow: 0 -2px 7px black;
 `;
-
+const Title = styled.h2`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
 const List = styled.ul`
   flex: 1 0 50%;
   display: flex;
@@ -47,8 +51,13 @@ const List = styled.ul`
 const Description = styled.li`
   border: 2px dashed black;
   border-radius: 0.5em;
-  padding: 0.5em;
+  padding: 0.2em;
   flex: 3;
+  overflow-y: hidden;
+
+  p {
+    line-height: 1.1;
+  }
 `;
 
 const Rating = styled.li`
@@ -100,8 +109,8 @@ const CardThing = props => {
     variables: { id: thing.category[thing.category.length - 1] }
   });
   const description =
-    thing.description.length > 47
-      ? thing.description.slice(0, 47) + '...'
+    thing.description.length > 60
+      ? thing.description.slice(0, 60) + '...'
       : thing.description;
   const nStarActive = Number(thing.rating);
   const nStar = 10 - nStarActive;
@@ -115,7 +124,7 @@ const CardThing = props => {
       </ImageContainer>
       <List>
         <li>
-          <h2>{thing.title || 'title none'}</h2>
+          <Title>{thing.title || 'title none'}</Title>
         </li>
         <Rating>
           {new Array(nStarActive).fill(null).map((item, i) => (

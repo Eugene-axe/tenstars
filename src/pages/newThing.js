@@ -5,9 +5,7 @@ import { NEW_THING } from '../client/mutation';
 import { GET_THINGS } from '../client/query';
 
 import FormThing from '../components/FormThing';
-const Wrapper = styled.div`
-  
-`;
+const Wrapper = styled.div``;
 
 const NewThing = props => {
   useEffect(() => {
@@ -17,7 +15,14 @@ const NewThing = props => {
     onCompleted: data => {
       props.history.push('/');
     },
-    refetchQueries: [{ query: GET_THINGS }]
+    refetchQueries: [
+      {
+        query: GET_THINGS,
+        variables: {
+          category: ''
+        }
+      }
+    ]
   });
 
   return (

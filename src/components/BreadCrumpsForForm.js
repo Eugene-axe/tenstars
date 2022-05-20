@@ -13,7 +13,7 @@ const Link = styled.span`
 `;
 const Crumbs = (props) => {
   const { data, loading, error } = useQuery(GET_CATEGORY, {
-    variables: { id: props.id },
+    variables: { id: props.id }
   });
   let title;
   if (loading) title = "Loading ";

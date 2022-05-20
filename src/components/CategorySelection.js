@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_CATEGORIES, GET_CATEGORY } from '../client/query';
+import { GET_CATEGORY } from '../client/query';
 import { NEW_CATEGORY } from '../client/mutation';
 import BreadCrumbsForForm from './BreadCrumpsForForm';
 import ButtonPositiveMini from './elements/ButtonPositiveMini';
@@ -53,6 +53,7 @@ const Label = styled.div`
 `;
 const Dropdown = styled.div`
   max-height: calc(1.5em * 4);
+  overflow-y: auto;
   width: 100%;
   position: absolute;
   top: 1.5em;
@@ -71,15 +72,22 @@ const Dropdown = styled.div`
 `;
 const CategorySelection = props => {
   const basisCatId = process.env.CAT_ID;
-  const [isOpen, setOpen] = useState(false);
-  const [id, setId] = useState(basisCatId);
+  const [isOpenSelector, setOpenSelector] = useState(false);
+  const [idCurCat, setIdCurCat] = useState(basisCatId);
   const [newTitle, setNewTitle] = useState('');
   const [newCategory] = useMutation(NEW_CATEGORY, {
-    variables: { ancestor: id, title: newTitle },
-    refetchQueries: [{query: GET_CATEGORIES}]
+    onCompleted: data => {
+      setIdCurCat(data.newCategory._id);
+    },
+    refetchQueries: [
+      {
+        query: GET_CATEGORY,
+        variables: { id: idCurCat }
+      }
+    ]
   });
-  const { data, loading, error } = useQuery(GET_CATEGORY, {
-    variables: { id: id },
+  const { data, loading, error, client } = useQuery(GET_CATEGORY, {
+    variables: { id: idCurCat },
     onCompleted: data => {
       props.setValues([...data.category.ancestors, data.category._id]);
     }
@@ -93,16 +101,16 @@ const CategorySelection = props => {
       <Path>
         <BreadCrumbsForForm
           path={[...data.category.ancestors, data.category._id]}
-          setId={setId}
+          setId={setIdCurCat}
         />
       </Path>
       <Selection
         onMouseLeave={() => {
-          setOpen(false);
+          // setOpenSelector(false);
         }}
       >
         <LabelContainer>
-          {isOpen ? (
+          {isOpenSelector ? (
             <InputNew>
               <input
                 type="text"
@@ -115,7 +123,11 @@ const CategorySelection = props => {
               <ButtonPositiveMini
                 type="button"
                 onClick={() => {
-                  newCategory(newTitle);
+                  // newCategory(newTitle);
+                  newCategory({
+                    variables: { ancestor: idCurCat, title: newTitle }
+                  });
+                  setNewTitle('');
                 }}
               >
                 +
@@ -124,21 +136,21 @@ const CategorySelection = props => {
           ) : (
             <Label
               onClick={() => {
-                setOpen(true);
+                setOpenSelector(true);
               }}
             >
               Choose category
             </Label>
           )}
         </LabelContainer>
-        {isOpen && (
+        {isOpenSelector && (
           <Dropdown>
             <ul>
               {data.category.descendants.map(cat => (
                 <li
                   key={cat._id}
                   onClick={() => {
-                    setId(cat._id);
+                    setIdCurCat(cat._id);
                   }}
                 >
                   {cat.title}
