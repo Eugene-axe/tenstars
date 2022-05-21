@@ -13,14 +13,22 @@ import {
 } from '../components/elements';
 import BreadCrumbs from '../components/BreadCrumps';
 import defaultImg from '../img/picture.svg';
+import ThingLoader from '../components/loaders/thingLoader';
 
 const Wrapper = styled.div`
+  height: 100%;
   display: grid;
   background: linear-gradient(
     30deg,
     hsl(222deg 42% 89%),
     hsl(235deg 38% 95%),
     hsl(240deg 38% 85%) 75%
+  );
+  background: linear-gradient(
+    31deg,
+    hsl(211deg 55% 82%) -48%,
+    hsl(198deg 44% 93%) 63%,
+    hsl(46deg 50% 50%) 200%
   );
   padding: 1em;
   grid-template-columns: repeat(2, minmax(350px, 1fr));
@@ -94,7 +102,7 @@ const RatingContainer = styled.div`
     font-size: 1.4em;
   }
 
-  @media(max-width: 460px) {
+  @media (max-width: 460px) {
     font-size: 0.8em;
   }
 `;
@@ -188,7 +196,7 @@ const ThingPage = props => {
     variables: { _id: id }
   });
 
-  if (loading) return <p>Loading ...</p>;
+  if (loading) return <ThingLoader />;
   if (error) return <p>Error find thing</p>;
   const thing = data.thing;
 
@@ -200,7 +208,6 @@ const ThingPage = props => {
     <Wrapper>
       <PathContainer>
         <BreadCrumbs catList={thing.category} />
-        {/* <a href="#">категория</a> /<a href="#">подкатегория</a> */}
       </PathContainer>
       <Title>{thing.title}</Title>
       <RatingContainer>
