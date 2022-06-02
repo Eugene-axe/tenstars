@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Blink from './animationBlink';
+import { blink } from '../styled/keyframes';
 
 const Wrapper = styled.div`
   --field-color: hsl(209deg 16% 88%);
@@ -58,7 +58,7 @@ const Wrapper = styled.div`
       #e8e8e8 50%,
       transparent 80%
     );
-    animation: ${Blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    animation: ${blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   * {
@@ -193,9 +193,9 @@ const thingLoader = props => {
         <span>*</span>
       </RatingContainer>
       <Description>
-        <div class="description-row"></div>
-        <div class="description-row"></div>
-        <div class="description-row"></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </Description>
       <Footer>
         <span></span>
@@ -204,9 +204,9 @@ const thingLoader = props => {
 
       <Figure />
       <PreviewImage>
-        <div class="pic1"></div>
-        <div class="pic2"></div>
-        <div class="pic3"></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </PreviewImage>
       <Buttons>
         <span></span>
@@ -216,6 +216,5 @@ const thingLoader = props => {
     </Wrapper>
   );
 };
-
 
 export default thingLoader;

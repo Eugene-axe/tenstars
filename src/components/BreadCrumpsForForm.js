@@ -1,53 +1,58 @@
-import React from "react";
-import styled from "styled-components";
-import { useQuery } from "@apollo/client";
-import { GET_CATEGORY } from "../client/query";
+import React from 'react';
+import styled from 'styled-components';
+import { useQuery } from '@apollo/client';
+import { GET_CATEGORY } from '../client/query';
+import { Wrapper, Item } from './BreadCrumps';
 
-const Link = styled.span`
-  cursor: pointer;
-  transition: color 0.2s ease;
-  &:hover {
-    text-decoration: underline;
-    color: hsl(220deg 30% 52%);
+const Wrapper2 = styled(Wrapper)``;
+const Item2 = styled(Item)`
+  ${'' /* margin: 0.35em 0; */}
+  span {
+    display: inline-block;
+    padding: 0.4em 0.7em;
+    font-size: 0.9em;
+    @media (max-width: 400px) {
+      font-size: 0.7em;
+    }
   }
 `;
-const Crumbs = (props) => {
+
+const Crumbs = props => {
   const { data, loading, error } = useQuery(GET_CATEGORY, {
     variables: { id: props.id }
   });
   let title;
-  if (loading) title = "Loading ";
-  if (error) title = "Error ";
+  if (loading) title = 'Loading ';
+  if (error) title = 'Error ';
   title = data?.category.title;
   return (
-    <Link
+    <span
       onClick={() => {
-        props.action(props.id);
+        props.goTo(props.id);
       }}
-    >{`${title}`}</Link>
+    >{`${title}`}</span>
   );
 };
 
-const BreadCrumbsForForm = (props) => {
+const BreadCrumbsForForm = props => {
   const { path, setId } = props;
-  const goTo = (id) => {
+  const goTo = id => {
     setId(id);
   };
   return (
-    <div>
-      {path.map((cat) => {
+    <Wrapper2>
+      {path.map(cat => {
         if (cat) {
           return (
-            <span key={cat}>
-              {` / `}
-              <Crumbs id={cat} action={goTo} />
-            </span>
+            <Item2 key={cat}>
+              <Crumbs id={cat} goTo={goTo} />
+            </Item2>
           );
         } else {
-          return "";
+          return '';
         }
       })}
-    </div>
+    </Wrapper2>
   );
 };
 

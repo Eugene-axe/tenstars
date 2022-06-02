@@ -14,11 +14,11 @@ export const SIGNIN_USER = gql`
 
 export const NEW_THING = gql`
   mutation newThing(
-    $description: String
-    $rating: Int
-    $title: String
+    $description: String!
+    $rating: Int!
+    $title: String!
     $image: String
-    $category: [ID]
+    $category: [ID]!
   ) {
     newThing(
       title: $title
@@ -77,8 +77,8 @@ export const DELETE_THING = gql`
   }
 `;
 export const NEW_CATEGORY = gql`
-  mutation newCategory($title: String!, $ancestor: ID) {
-    newCategory(title: $title, ancestor: $ancestor) {
+  mutation newCategory($title: String!, $directAncestor: ID) {
+    newCategory(title: $title, directAncestor: $directAncestor) {
       _id
       title
       directAncestor

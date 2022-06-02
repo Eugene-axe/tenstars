@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Blink from './animationBlink';
+import { blink } from '../styled/keyframes';
 
 const SceletCard = props => {
   return (
@@ -74,7 +74,7 @@ const Card = styled.div`
       hsl(206deg 10% 80%) 50%,
       transparent 85%
     );
-    animation: ${Blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    animation: ${blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 5;
   }
 `;

@@ -4,7 +4,7 @@ import useAlert from '../../hooks/useAlert';
 import { readyStyle, invalidError } from '../styled/additionalStyles';
 import { NEUTRAL } from '../../const';
 
-export default ButtonDander = styled.button`
+const ButtonDander = styled.button`
   flex: 1;
   padding: 0.6em;
   text-align: center;
@@ -24,6 +24,25 @@ export default ButtonDander = styled.button`
       hsl(26deg 60% 50%)
     );
   }
+  ${({ ready }) => ready && readyStyle}
 `;
 
-
+export default function({ children, action }) {
+  const [ready, setReady] = useState(false);
+  const { setAlert } = useAlert();
+  return (
+    <ButtonDander
+      ready={ready}
+      onClick={() => {
+        if (!ready) {
+          setReady(true);
+          setAlert('Press one-more time', NEUTRAL);
+        } else {
+          action();
+        }
+      }}
+    >
+      {children}
+    </ButtonDander>
+  );
+}

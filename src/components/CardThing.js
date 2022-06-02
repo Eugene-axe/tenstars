@@ -20,6 +20,11 @@ const Card = styled.div`
     hsl(46deg 50% 50%) 200%
   );
   overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  &:hover {
+    box-shadow: 0 0 4px 2px hsl(207deg 31% 26%);
+  }
 `;
 const ImageContainer = styled.div`
   flex: 1 1 50%;
@@ -72,36 +77,36 @@ const Info = styled.li`
   justify-content: space-between;
   font-size: 0.8em;
 `;
-const ButtonMore = styled.li`
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  box-shadow: 0 0 1px black;
-  margin: 0 -0.5em -0.5em -0.5em;
+// const ButtonMore = styled.li`
+//   border-bottom-left-radius: 6px;
+//   border-bottom-right-radius: 6px;
+//   box-shadow: 0 0 1px black;
+//   margin: 0 -0.5em -0.5em -0.5em;
 
-  span {
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-size: 1em;
-    color: #fff;
-    text-shadow: 0 0 2px hsl(240deg 66% 28%);
-    background: hsl(221deg 29% 79%);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
+//   span {
+//     display: block;
+//     width: 100%;
+//     text-align: center;
+//     font-size: 1em;
+//     color: #fff;
+//     text-shadow: 0 0 2px hsl(240deg 66% 28%);
+//     background: hsl(221deg 29% 79%);
+//     cursor: pointer;
+//     transition: all 0.3s ease;
+//     text-decoration: none;
+//     border-bottom-left-radius: 6px;
+//     border-bottom-right-radius: 6px;
 
-    &:hover {
-      color: hsl(240deg 66% 28%);
-      background: hsl(35deg 40% 95%);
-    }
-    &:active {
-      color: hsl(240deg 66% 28%);
-      background: hsl(35deg 40% 85%);
-    }
-  }
-`;
+//     &:hover {
+//       color: hsl(240deg 66% 28%);
+//       background: hsl(35deg 40% 95%);
+//     }
+//     &:active {
+//       color: hsl(240deg 66% 28%);
+//       background: hsl(35deg 40% 85%);
+//     }
+//   }
+// `;
 
 const CardThing = props => {
   const { thing } = props;
@@ -115,7 +120,12 @@ const CardThing = props => {
   const nStarActive = Number(thing.rating);
   const nStar = 10 - nStarActive;
   return (
-    <Card key={thing._id}>
+    <Card
+      key={thing._id}
+      onClick={() => {
+        props.history.push(`/thing/${thing._id}`);
+      }}
+    >
       <ImageContainer>
         <ThingImage
           categoryName={loading ? 'loading...' : categoryData?.category.title}
@@ -140,11 +150,11 @@ const CardThing = props => {
           <span>By: {thing.author.username || 'unknown author'}</span>
           <span>{dayjs(thing.createdAt).format('DD.MM.YY')}</span>
         </Info>
-        <ButtonMore
+        {/* <ButtonMore
           onClick={event => props.history.push(`/thing/${thing._id}`)}
         >
           <span>More</span>
-        </ButtonMore>
+        </ButtonMore> */}
       </List>
     </Card>
   );

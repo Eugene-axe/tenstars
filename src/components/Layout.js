@@ -50,7 +50,7 @@ const Main = styled.main`
   border-left: 1px solid black;
   flex: 1 1 auto;
   overflow-y: scroll;
-  padding-bottom: 1em;
+  ${'' /* padding-bottom: 1em; */}
   @media (max-width: 400px) {
     border-left: 0;
     border-top: 1px solid black;

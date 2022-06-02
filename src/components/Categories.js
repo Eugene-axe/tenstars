@@ -30,7 +30,11 @@ const Categories = () => {
   });
   if (error) return <p>Errorka</p>;
   return (
-    <Wrapper>
+    <Wrapper
+      onBlur={event => {
+        if (!event.relatedTarget) setHide(true);
+      }}
+    >
       <ButtonToggle
         onClick={() => {
           setHide(!isHide);

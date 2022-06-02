@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_CATEGORY } from '../client/query';
 import { NEW_CATEGORY } from '../client/mutation';
 import BreadCrumbsForForm from './BreadCrumpsForForm';
 import ButtonPositiveMini from './elements/ButtonPositiveMini';
+import useAlert from '../hooks/useAlert';
+import useValidate from '../hooks/useValidate';
+import { NEGATIVE } from '../const';
+import { invalidError } from './styled/additionalStyles';
 
 const Wrapper = styled.div`
   flex: 1;
@@ -38,10 +42,14 @@ const InputNew = styled.div`
     flex: 9;
     &:focus {
       background-color: hsl(35deg 40% 85%);
+      ${({ error }) => error && invalidError}
     }
+    
   }
+  
 `;
 const Label = styled.div`
+  cursor: pointer;
   position: relative;
   &:after {
     content: ' \\25BC';
@@ -75,6 +83,9 @@ const CategorySelection = props => {
   const [isOpenSelector, setOpenSelector] = useState(false);
   const [idCurCat, setIdCurCat] = useState(basisCatId);
   const [newTitle, setNewTitle] = useState('');
+  const titleCat = useRef();
+  const { setAlert } = useAlert();
+  const { validate, errors, isPermit } = useValidate();
   const [newCategory] = useMutation(NEW_CATEGORY, {
     onCompleted: data => {
       setIdCurCat(data.newCategory._id);
@@ -92,6 +103,21 @@ const CategorySelection = props => {
       props.setValues([...data.category.ancestors, data.category._id]);
     }
   });
+  const onClickAdd = event => {
+    if (!newTitle) {
+      titleCat.current.focus();
+      return;
+    }
+    if (!isPermit) {
+      setAlert('Incorrect category name', NEGATIVE);
+      return;
+    }
+    newCategory({
+      variables: { directAncestor: idCurCat, title: newTitle }
+    });
+    setNewTitle('');
+    setOpenSelector(false);
+  };
   if (loading) return <p>Information about this category downloadind... </p>;
   if (error)
     return <p>Error at same downloadind information about category! </p>;
@@ -105,31 +131,37 @@ const CategorySelection = props => {
         />
       </Path>
       <Selection
-        onMouseLeave={() => {
-          // setOpenSelector(false);
+        tabIndex={0}
+        onBlur={event => {
+          console.log('blur');
+          if (!event.relatedTarget) setOpenSelector(false);
         }}
       >
         <LabelContainer>
           {isOpenSelector ? (
-            <InputNew>
+            <InputNew error={errors.titleCat}>
               <input
                 type="text"
+                name="titleCat"
                 placeholder="Enter new category"
                 value={newTitle}
+                ref={titleCat}
                 onChange={event => {
                   setNewTitle(event.target.value);
                 }}
-              />
-              <ButtonPositiveMini
-                type="button"
-                onClick={() => {
-                  // newCategory(newTitle);
-                  newCategory({
-                    variables: { ancestor: idCurCat, title: newTitle }
+                onBlur={event => {
+                  validate({
+                    name: event.target.name,
+                    value: event.target.value,
+                    conditions: {
+                      require: true,
+                      minLength: 3,
+                      maxLength: 20
+                    }
                   });
-                  setNewTitle('');
                 }}
-              >
+              />
+              <ButtonPositiveMini type="button" onClick={onClickAdd}>
                 +
               </ButtonPositiveMini>
             </InputNew>

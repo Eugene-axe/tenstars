@@ -14,9 +14,10 @@ import {
 import BreadCrumbs from '../components/BreadCrumps';
 import defaultImg from '../img/picture.svg';
 import ThingLoader from '../components/loaders/thingLoader';
+import ButtonImportantAction from '../components/elements/ButtonImportantAction';
 
 const Wrapper = styled.div`
-  height: 100%;
+  min-height: 100%;
   display: grid;
   background: linear-gradient(
     30deg,
@@ -62,16 +63,12 @@ const Wrapper = styled.div`
 const PathContainer = styled.div`
   grid-area: path;
   align-self: center;
-  padding: 0.5em;
   border: 2px dashed black;
   border-radius: 0.5em;
   font-size: 1.1rem;
   a {
+    color: inherit;
     text-decoration: none;
-    color: black;
-  }
-  a:hover {
-    text-decoration: underline;
   }
 `;
 const Title = styled.h2`
@@ -118,6 +115,7 @@ const Description = styled.div`
   border-radius: 0.5em;
   padding: 0.5em;
   min-height: 5em;
+  overflow: hidden;
 `;
 const Footer = styled.div`
   grid-area: footer;
@@ -126,6 +124,7 @@ const Footer = styled.div`
 `;
 const Figure = styled.figure`
   grid-area: image;
+  min-height: 150px;
   background: center / cover no-repeat url('${props =>
     props.image || defaultImg} ');
   border: 1px solid hsl(205deg 90% 80%);
@@ -182,14 +181,20 @@ const ThingPage = props => {
 
   const [deleteThing] = useMutation(DELETE_THING, {
     onCompleted: data => {
-      console.log(data);
       if (data.deleteThing) {
         props.history.push('/');
       } else {
         console.log('Что то пошло не так при удалении');
       }
     },
-    refetchQueries: [{ query: GET_THINGS }]
+    refetchQueries: [
+      {
+        query: GET_THINGS,
+        variables: {
+          category: ''
+        }
+      }
+    ]
   });
 
   const { data, error, loading } = useQuery(GET_THING, {
@@ -241,13 +246,9 @@ const ThingPage = props => {
         >
           Leave
         </ButtonNegative>
-        <ButtonDanger
-          onClick={event => {
-            deleteThing({ variables: { id: id } });
-          }}
-        >
+        <ButtonImportantAction action={() => deleteThing({ variables: { id: id } })}>
           Delete
-        </ButtonDanger>
+        </ButtonImportantAction>
         <ButtonPositive
           onClick={() => {
             props.history.push(`/edit/${id}`);

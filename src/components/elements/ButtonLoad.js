@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Blink from '../loaders/animationBlink';
+import { blink } from '../styled/keyframes';
 
 
 const ButtonLoad = styled.button`
@@ -31,7 +31,7 @@ const ButtonLoad = styled.button`
       hsl(180deg 12% 85% / 50%) 50%,
       transparent 80%
     );
-    animation: ${Blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    animation: ${blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @keyframes load {

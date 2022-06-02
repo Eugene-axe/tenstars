@@ -1,15 +1,221 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { ThingImage, ButtonPositive, ButtonNegative } from './elements';
 import CategorySelection from './CategorySelection';
+import useAlert from '../hooks/useAlert';
+import useValidate from '../hooks/useValidate';
+import { invalidError } from './styled/additionalStyles';
+import { NEUTRAL, NEGATIVE } from '../const';
+
+const FormThing = props => {
+  const imgbantoken = process.env.IMG_BAN_TOKEN;
+  const imgbanskey = process.env.IMG_BAN_SKEY;
+  const title = useRef();
+  const description = useRef();
+  const rating = useRef();
+  const [values, setValues] = useState({
+    title: props.thing?.title || '',
+    description: props.thing?.description || '',
+    rating: +props.thing?.rating || 0,
+    category: props.thing?.category || [''],
+    image: props.thing?.image || null
+  });
+  const { validate, errors, isPermit } = useValidate();
+  const { setAlert } = useAlert();
+  const [loadImage, setLoadImage] = useState(false);
+  const onChange = event => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
+
+  const onImage = async event => {
+    setLoadImage(true);
+    const file = event.target.files[0];
+
+    let fd = new FormData();
+    fd.append('image', file);
+    fd.append('secret_key', imgbanskey);
+    try {
+      const response = await fetch('https://api.imageban.ru/v1', {
+        headers: {
+          Authorization: `TOKEN ${imgbantoken}`
+        },
+        method: 'POST',
+        body: fd
+      });
+      const data = await response.json();
+      if (data.success) {
+        setValues({ ...values, image: data.data.link });
+      } else {
+        throw new Error('File are no appload');
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoadImage(false);
+    }
+  };
+
+  const onSubmit = event => {
+    event.preventDefault();
+    if (!values.title) {
+      setAlert('Input title field', NEUTRAL);
+      title.current.focus();
+      return;
+    }
+    if (!values.description) {
+      setAlert('Input description field', NEUTRAL);
+      description.current.focus();
+      return;
+    }
+    if (!values.rating) {
+      setAlert('Rate the item', NEUTRAL);
+      rating.current.focus();
+      return;
+    }
+    if (!isPermit) {
+      console.log(errors)
+      console.log(values)
+      
+      setAlert('There are field conflicts', NEGATIVE);
+      return;
+    }
+    props.mutation({
+      variables: { ...values }
+    });
+    props.history.push('/');
+  };
+
+  return (
+    <Form onSubmit={onSubmit}>
+      <ImageContainer>
+        <ThingImage image={values.image} />
+      </ImageContainer>
+      <Fieldset>
+        <legend>Create thing card</legend>
+        <List>
+          <li>
+            <label htmlFor="thing-title">Title</label>
+            <InputTitle
+              error={errors.title}
+              ref={title}
+              type="text"
+              id="thing-title"
+              name="title"
+              value={values.title}
+              onChange={onChange}
+              onBlur={event => {
+                validate({
+                  name: event.target.name,
+                  value: event.target.value,
+                  conditions: {
+                    require: true,
+                    minLength: 4,
+                    maxLength: 20
+                  }
+                });
+              }}
+            />
+          </li>
+          <li>
+            <CategorySelection
+              setValues={category => {
+                setValues({ ...values, category });
+              }}
+            />
+          </li>
+          <li>
+            <label htmlFor="thing-description">Descriprion</label>
+            <AreaDescription
+              name="description"
+              id="thing-description"
+              rows="4"
+              value={values.description}
+              ref={description}
+              onChange={onChange}
+              onBlur={event => {
+                validate({
+                  name: event.target.name,
+                  value: event.target.value,
+                  conditions: {
+                    require: true,
+                    minLength: 4,
+                    maxLength: 200
+                  }
+                });
+              }}
+              error={errors.description}
+            />
+          </li>
+          <li>
+            <label htmlFor="thing-rating"></label>
+            <RatingContainer error={errors.rating}>
+              <InputRating
+                type="range"
+                min="1"
+                max="10"
+                step="1"
+                value={values.rating}
+                name="rating"
+                id="thing-rating"
+                ref={rating}
+                onChange={event => {
+                  setValues({
+                    ...values,
+                    [event.target.name]: Number(event.target.value)
+                  });
+                  validate({
+                    name: event.target.name,
+                    value: Number(event.target.value),
+                    conditions: {
+                      require: true,
+                      min: 1,
+                      max: 10
+                    }
+                  });
+                }}
+              />
+              <span>{values.rating}</span>
+            </RatingContainer>
+          </li>
+          <InputFileContainer>
+            <label htmlFor="thing-image">Image</label>
+            <input
+              type="file"
+              name="image"
+              id="thing-image"
+              onChange={onImage}
+            />
+          </InputFileContainer>
+          <ButtonContainer className="ButtonContainer">
+            <ButtonNegative
+              type="button"
+              onClick={() => {
+                props.history.goBack();
+              }}
+            >
+              leave
+            </ButtonNegative>
+            <ButtonPositive
+              type="submit"
+              onSubmit={onSubmit}
+              disabled={loadImage}
+            >
+              Send
+            </ButtonPositive>
+          </ButtonContainer>
+        </List>
+      </Fieldset>
+    </Form>
+  );
+};
 
 const Form = styled.form`
   width: 25em;
   margin: 1em;
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 700px;
   border: 2px solid black;
   border-radius: 0.5em;
   box-shadow: 2px 2px 3px gray;
@@ -25,8 +231,12 @@ const Form = styled.form`
     margin: 0;
     border: 1px solid black;
   }
+  * {
+    transition: all 0.2s ease;
+  }
 `;
 const ImageContainer = styled.div`
+  min-height: 150px;
   flex: 1;
   border-top-left-radius: 0.4em;
   border-top-right-radius: 0.4em;
@@ -69,6 +279,9 @@ const InputTitle = styled.input`
   border-top-right-radius: 0.2em;
   border-top-left-radius: 0.2em;
   transition: all 0.2s ease;
+  &#thing-title {
+    ${({ error }) => error && invalidError}
+  }
 
   &:hover {
     background-color: hsl(35deg 40% 95%);
@@ -88,6 +301,8 @@ const AreaDescription = styled.textarea`
   padding: 0.5em 1em 0.2em;
   background-color: transparent;
   resize: none;
+
+  ${({ error }) => error && invalidError}
 
   &:hover {
     background-color: hsl(35deg 40% 95%);
@@ -109,6 +324,7 @@ const RatingContainer = styled.div`
     transform: translateY(-50%);
     color: inherit;
   }
+  ${({ error }) => error && invalidError}
 `;
 const InputRating = styled.input`
   flex: 1;
@@ -119,6 +335,9 @@ const InputRating = styled.input`
   border-radius: 0.2em;
 
   &:hover {
+    background: hsl(35deg 40% 95%);
+  }
+  &:focus {
     background: hsl(35deg 40% 95%);
   }
   &:active {
@@ -192,137 +411,4 @@ const ButtonContainer = styled.li`
   }
 `;
 
-const ThingForm = props => {
-  const [values, setValues] = useState({
-    title: props.thing?.title || '',
-    description: props.thing?.description || '',
-    rating: +props.thing?.rating || 0,
-    category: props.thing?.category || [''],
-    image: props.thing?.image || null
-  });
- 
-  const [loadImage, setLoadImage] = useState(false);
-  const onChange = event => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
-
-  const onImage = async event => {
-    setLoadImage(true);
-    const file = event.target.files[0];
-
-    let fd = new FormData();
-    fd.append('image', file);
-    fd.append('secret_key', '3GaxMgINs32ZGLZvJTgwk9uvVSJnrt0c35t');
-    try {
-      const response = await fetch('https://api.imageban.ru/v1', {
-        headers: {
-          Authorization: 'TOKEN DPMq9qeswiAznWzRz3a1'
-        },
-        method: 'POST',
-        body: fd
-      });
-      const data = await response.json();
-      if (data.success) {
-        setValues({ ...values, image: data.data.link });
-      } else {
-        throw new Error('File are no appload');
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoadImage(false);
-    }
-  };
-
-  const onSubmit = event => {
-    event.preventDefault();
-    props.mutation({
-      variables: { ...values }
-    });
-    props.history.push('/');
-  };
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <ImageContainer>
-        <ThingImage  image={values.image} />
-      </ImageContainer>
-      <Fieldset>
-        <legend>Create thing card</legend>
-        <List>
-          <li>
-            <label htmlFor="thing-title">Title</label>
-            <InputTitle
-              type="text"
-              id="thing-title"
-              name="title"
-              value={values.title}
-              onChange={onChange}
-              required
-            />
-          </li>
-          <li>
-            <CategorySelection
-              setValues={category => setValues({ ...values, category })}
-            />
-          </li>
-          <li>
-            <label htmlFor="thing-description">Descriprion</label>
-            <AreaDescription
-              name="description"
-              id="thing-description"
-              rows="4"
-              value={values.description}
-              onChange={onChange}
-            />
-          </li>
-          <li>
-            <label htmlFor="thing-rating"></label>
-            <RatingContainer>
-              <InputRating
-                type="range"
-                min="1"
-                max="10"
-                step="1"
-                value={values.rating}
-                name="rating"
-                id="thing-rating"
-                onChange={event => {
-                  setValues({
-                    ...values,
-                    [event.target.name]: Number(event.target.value)
-                  });
-                }}
-              />
-              <span>{values.rating}</span>
-            </RatingContainer>
-          </li>
-          <InputFileContainer>
-            <label htmlFor="thing-image">Image</label>
-            <input
-              type="file"
-              name="image"
-              id="thing-image"
-              onChange={onImage}
-            />
-          </InputFileContainer>
-          <ButtonContainer className="ButtonContainer">
-            <ButtonNegative
-              type="button"
-              onClick={() => {
-                props.history.goBack();
-              }}
-            >
-              leave
-            </ButtonNegative>
-            <ButtonPositive type="submit" onSubmit={onSubmit} disabled={loadImage}>
-              Send
-            </ButtonPositive>
-          </ButtonContainer>
-        </List>
-      </Fieldset>
-    </Form>
-  );
-};
-
-export default withRouter(ThingForm);
+export default withRouter(FormThing);

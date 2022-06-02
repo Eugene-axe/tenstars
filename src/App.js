@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Pages from './pages';
+import Popup from './components/Popup';
 import GlobalStyle from './components/GlobalStyle';
 import {
   ApolloClient,
@@ -9,6 +10,8 @@ import {
   createHttpLink
 } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
+import { AlertProvider } from './AlertContext';
+import { SET_IS_LOGGED_IN } from './client/cache';
 
 const uri = process.env.API_URI;
 const httpLink = createHttpLink({ uri });
@@ -29,18 +32,28 @@ const client = new ApolloClient({
 });
 
 const data = {
-  isLoggedIn: !!localStorage.getItem('token'),
-  currentCategory: ''
+  isLoggedIn: !!localStorage.getItem('token')
 };
-cache.writeData({ data });
+
+client.writeQuery({
+  query: SET_IS_LOGGED_IN,
+  data: data
+});
+
 client.onResetStore(() => {
-  cache.writeData({ data });
+  client.writeQuery({
+    query: SET_IS_LOGGED_IN,
+    data: data
+  });
 });
 const App = () => {
   return (
     <ApolloProvider client={client}>
       <GlobalStyle />
-      <Pages />
+      <AlertProvider>
+        <Popup />
+        <Pages />
+      </AlertProvider>
     </ApolloProvider>
   );
 };

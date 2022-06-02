@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { useApolloClient } from '@apollo/client';
 import styled from 'styled-components';
 import { ButtonAsLink, ButtonNegative } from './elements';
+import { SET_IS_LOGGED_IN } from '../client/cache';
+import useAlert from '../hooks/useAlert';
+import { NEUTRAL } from '../const';
 
 const Nav = styled.nav`
   ul {
@@ -104,16 +108,27 @@ const ButtonToggle = styled(ButtonNegative)`
 `;
 
 const Navigation = props => {
+  const client = useApolloClient();
   const [isHide, setHide] = useState(true);
+  const { setAlert } = useAlert();
   const logOut = event => {
-    localStorage.removeItem('token');
-    props.client.resetStore();
-    props.client.writeData({ data: { isLoggedIn: false } });
-    props.history.push('/');
+    localStorage.removeItem('token'); 
+    setAlert('Пока! Заходи еще!😩', NEUTRAL);
+    client.resetStore();
+    client.writeQuery({
+      query: SET_IS_LOGGED_IN,
+      data: { isLoggedIn: false }
+    });
+      props.history.push('/');
   };
 
   return (
-    <Nav isHide={isHide}>
+    <Nav
+      isHide={isHide}
+      onBlur={event => {
+        if (!event.relatedTarget) setHide(true);
+      }}
+    >
       <ButtonToggle
         onClick={() => {
           setHide(!isHide);
@@ -121,7 +136,11 @@ const Navigation = props => {
       >
         Menu
       </ButtonToggle>
-      <ul>
+      <ul
+        onClick={() => {
+          setHide(true);
+        }}
+      >
         <li>
           <Link to="/">Home</Link>
         </li>
