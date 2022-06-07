@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
-import useAlert from '../../hooks/useAlert';
-import { readyStyle, invalidError } from '../styled/additionalStyles';
-import { NEUTRAL } from '../../const';
+
 
 export default ButtonDander = styled.button`
   flex: 1;

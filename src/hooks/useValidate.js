@@ -40,7 +40,7 @@ export default function() {
     }
 
     if (value && conditions.max) {
-      if (+value >= conditions.max) {
+      if (+value > conditions.max) {
         alertNegative(`max value ${conditions.max}`);
         setErrors({ [name]: true });
         return;

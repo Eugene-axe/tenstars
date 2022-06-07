@@ -6,7 +6,6 @@ import { GET_THING, GET_THINGS } from '../client/query';
 import { DELETE_THING } from '../client/mutation';
 import {
   ButtonNegative,
-  ButtonDanger,
   Star,
   StarActive,
   ButtonPositive
@@ -15,6 +14,8 @@ import BreadCrumbs from '../components/BreadCrumps';
 import defaultImg from '../img/picture.svg';
 import ThingLoader from '../components/loaders/thingLoader';
 import ButtonImportantAction from '../components/elements/ButtonImportantAction';
+import useAlert from '../hooks/useAlert';
+import { NEGATIVE, POSITIVE } from '../const';
 
 const Wrapper = styled.div`
   min-height: 100%;
@@ -178,14 +179,14 @@ const ThingPage = props => {
   useEffect(() => {
     document.title = 'Вещь - Thing Rating';
   }, []);
-
+  const { setAlert } = useAlert();
   const [deleteThing] = useMutation(DELETE_THING, {
     onCompleted: data => {
-      if (data.deleteThing) {
-        props.history.push('/');
-      } else {
-        console.log('Что то пошло не так при удалении');
-      }
+      setAlert('Thing deleted', POSITIVE);
+      props.history.push('/');
+    },
+    onError: error => {
+      setAlert(error.message , NEGATIVE)
     },
     refetchQueries: [
       {
@@ -246,7 +247,9 @@ const ThingPage = props => {
         >
           Leave
         </ButtonNegative>
-        <ButtonImportantAction action={() => deleteThing({ variables: { id: id } })}>
+        <ButtonImportantAction
+          action={() => deleteThing({ variables: { id: id } })}
+        >
           Delete
         </ButtonImportantAction>
         <ButtonPositive

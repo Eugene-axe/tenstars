@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  z-index: 2;
 `;
 const Path = styled.div`
   flex: 1;

@@ -7,9 +7,9 @@ import useAlert from '../hooks/useAlert';
 import useValidate from '../hooks/useValidate';
 import { invalidError } from './styled/additionalStyles';
 import { NEUTRAL, NEGATIVE } from '../const';
+import uploadImage from '../rest/loadImage';
 
 const FormThing = props => {
-  const imgbantoken = process.env.IMG_BAN_TOKEN;
   const imgbanskey = process.env.IMG_BAN_SKEY;
   const title = useRef();
   const description = useRef();
@@ -19,7 +19,8 @@ const FormThing = props => {
     description: props.thing?.description || '',
     rating: +props.thing?.rating || 0,
     category: props.thing?.category || [''],
-    image: props.thing?.image || null
+    image: props.thing?.image || null,
+    public: props.thing?.public || false
   });
   const { validate, errors, isPermit } = useValidate();
   const { setAlert } = useAlert();
@@ -36,21 +37,14 @@ const FormThing = props => {
     fd.append('image', file);
     fd.append('secret_key', imgbanskey);
     try {
-      const response = await fetch('https://api.imageban.ru/v1', {
-        headers: {
-          Authorization: `TOKEN ${imgbantoken}`
-        },
-        method: 'POST',
-        body: fd
-      });
-      const data = await response.json();
+      const data = await uploadImage(fd);
       if (data.success) {
         setValues({ ...values, image: data.data.link });
       } else {
         throw new Error('File are no appload');
       }
     } catch (err) {
-      console.log(err);
+      setAlert(err.message, NEGATIVE);
     } finally {
       setLoadImage(false);
     }
@@ -74,16 +68,12 @@ const FormThing = props => {
       return;
     }
     if (!isPermit) {
-      console.log(errors)
-      console.log(values)
-      
       setAlert('There are field conflicts', NEGATIVE);
       return;
     }
     props.mutation({
       variables: { ...values }
     });
-    props.history.push('/');
   };
 
   return (
@@ -110,7 +100,7 @@ const FormThing = props => {
                   value: event.target.value,
                   conditions: {
                     require: true,
-                    minLength: 4,
+                    minLength: 2,
                     maxLength: 20
                   }
                 });
@@ -123,6 +113,19 @@ const FormThing = props => {
                 setValues({ ...values, category });
               }}
             />
+          </li>
+          <li>
+            <PublickCheckbox>
+              <p>Who can see</p>
+              <PublicToggle htmlFor="thing-public" public={values.public} />
+              <input
+                type="checkbox"
+                id="thing-public"
+                onChange={() => {
+                  setValues({ ...values, public: !values.public });
+                }}
+              />
+            </PublickCheckbox>
           </li>
           <li>
             <label htmlFor="thing-description">Descriprion</label>
@@ -290,6 +293,56 @@ const InputTitle = styled.input`
   &:focus {
     background-color: hsl(35deg 40% 85%);
     border-color: rgba(0, 0, 0, 0.8);
+  }
+`;
+const PublickCheckbox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  input[type='checkbox'] {
+    display: none;
+  }
+`;
+const PublicToggle = styled.label`
+  transform: skew(-10deg);
+  overflow: hidden;
+  background: ${props =>
+    props.public
+      ? 'linear-gradient( to right, hsl(47deg 60% 50%),hsl(40deg 60% 50%))'
+      : 'linear-gradient( to right, hsl(230deg 30% 60%), hsl(218deg 30% 50%) )'};
+  display: inline-block;
+  width: 6em;
+  height: 1.5em;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  backface-visibility: hidden;
+  transition: all 0.2s ease;
+  &:after,
+  &:before {
+    transform: skew(10deg);
+    display: inline-block;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: center;
+    line-height: 1.5em;
+    bottom: 0;
+    position: absolute;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  &:after {
+    content: 'PUBLIC';
+    left: ${props => (props.public ? '0%' : '100%')};
+  }
+  &:before {
+    content: 'PRIVATE';
+    left: ${props => (props.public ? '-100%' : '0%')};
+  }
+  :active:before {
+    left: -10%;
   }
 `;
 const AreaDescription = styled.textarea`

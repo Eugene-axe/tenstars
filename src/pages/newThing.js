@@ -17,12 +17,10 @@ const NewThing = props => {
   const [newThing] = useMutation(NEW_THING, {
     onCompleted: data => {
       setAlert('Thing added', POSITIVE);
-      setTimeout(() => {
-        props.history.push('/');
-      }, 1500);
+      props.history.push('/');
     },
     onError: error => {
-      setAlert('The unthinkable happened', NEGATIVE);
+      setAlert(error.message, NEGATIVE);
     },
     refetchQueries: [
       {

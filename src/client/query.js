@@ -12,6 +12,7 @@ export const GET_THINGS = gql`
         rating
         image
         category
+        public
         author {
           _id
           username
@@ -35,6 +36,7 @@ export const GET_MY_THINGS = gql`
         rating
         image
         category
+        public
         author {
           _id
           username
@@ -55,6 +57,7 @@ export const GET_THING = gql`
       rating
       image
       category
+      public
       author {
         _id
         username
