@@ -77,36 +77,6 @@ const Info = styled.li`
   justify-content: space-between;
   font-size: 0.8em;
 `;
-// const ButtonMore = styled.li`
-//   border-bottom-left-radius: 6px;
-//   border-bottom-right-radius: 6px;
-//   box-shadow: 0 0 1px black;
-//   margin: 0 -0.5em -0.5em -0.5em;
-
-//   span {
-//     display: block;
-//     width: 100%;
-//     text-align: center;
-//     font-size: 1em;
-//     color: #fff;
-//     text-shadow: 0 0 2px hsl(240deg 66% 28%);
-//     background: hsl(221deg 29% 79%);
-//     cursor: pointer;
-//     transition: all 0.3s ease;
-//     text-decoration: none;
-//     border-bottom-left-radius: 6px;
-//     border-bottom-right-radius: 6px;
-
-//     &:hover {
-//       color: hsl(240deg 66% 28%);
-//       background: hsl(35deg 40% 95%);
-//     }
-//     &:active {
-//       color: hsl(240deg 66% 28%);
-//       background: hsl(35deg 40% 85%);
-//     }
-//   }
-// `;
 
 const CardThing = props => {
   const { thing } = props;

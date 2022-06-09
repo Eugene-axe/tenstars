@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 
-export default ButtonDander = styled.button`
+export default styled.button`
   flex: 1;
   padding: 0.6em;
   text-align: center;

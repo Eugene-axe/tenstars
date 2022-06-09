@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_CATEGORY } from '../client/query';
@@ -8,13 +8,19 @@ import ButtonPositiveMini from './elements/ButtonPositiveMini';
 import useAlert from '../hooks/useAlert';
 import useValidate from '../hooks/useValidate';
 import { NEGATIVE } from '../const';
-import { invalidError } from './styled/additionalStyles';
+import { invalidError, loaderBlinkBefore } from './styled/additionalStyles';
 
 const Wrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   z-index: 2;
+  &:focus {
+    border: 3px solid black;
+  }
+  * {
+    trnsition: all 0.2s ease;
+  }
 `;
 const Path = styled.div`
   flex: 1;
@@ -45,13 +51,12 @@ const InputNew = styled.div`
       background-color: hsl(35deg 40% 85%);
       ${({ error }) => error && invalidError}
     }
-    
   }
-  
 `;
 const Label = styled.div`
   cursor: pointer;
   position: relative;
+  overflow: hidden;
   &:after {
     content: ' \\25BC';
     position: absolute;
@@ -59,6 +64,8 @@ const Label = styled.div`
     right: 1em;
     transform: translateY(-50%);
   }
+  opacity: ${({wait})=> wait ? "0.5" : "1"}
+  ${({wait}) => wait && loaderBlinkBefore }
 `;
 const Dropdown = styled.div`
   max-height: calc(1.5em * 4);
@@ -81,10 +88,15 @@ const Dropdown = styled.div`
 `;
 const CategorySelection = props => {
   const basisCatId = process.env.CAT_ID;
-  const [isOpenSelector, setOpenSelector] = useState(false);
+  const [isHide, setHide] = useState(true);
   const [idCurCat, setIdCurCat] = useState(basisCatId);
   const [newTitle, setNewTitle] = useState('');
   const titleCat = useRef();
+  const wrapper = useRef();
+  useEffect(() => {
+    console.log(wrapper);
+    !isHide && wrapper.current.focus();
+  });
   const { setAlert } = useAlert();
   const { validate, errors, isPermit } = useValidate();
   const [newCategory] = useMutation(NEW_CATEGORY, {
@@ -117,29 +129,39 @@ const CategorySelection = props => {
       variables: { directAncestor: idCurCat, title: newTitle }
     });
     setNewTitle('');
-    setOpenSelector(false);
+    setHide(true);
   };
-  if (loading) return <p>Information about this category downloadind... </p>;
   if (error)
     return <p>Error at same downloadind information about category! </p>;
 
   return (
-    <Wrapper>
+    <Wrapper
+      ref={wrapper}
+      onBlur={event => {
+        console.log('blur');
+        if (!event.currentTarget.contains(event.relatedTarget)) setHide(true);
+      }}
+      onFocus={e => {
+        console.log('focus');
+      }}
+    >
       <Path>
         <BreadCrumbsForForm
-          path={[...data.category.ancestors, data.category._id]}
+          path={
+            loading ? [''] : [...data.category.ancestors, data.category._id]
+          }
           setId={setIdCurCat}
         />
       </Path>
       <Selection
         tabIndex={0}
-        onBlur={event => {
-          console.log('blur');
-          if (!event.relatedTarget) setOpenSelector(false);
+        onClick={event => {
+          isHide && setHide(false);
+          wrapper.current.focus();
         }}
       >
         <LabelContainer>
-          {isOpenSelector ? (
+          {!isHide && !loading ? (
             <InputNew error={errors.titleCat}>
               <input
                 type="text"
@@ -167,16 +189,10 @@ const CategorySelection = props => {
               </ButtonPositiveMini>
             </InputNew>
           ) : (
-            <Label
-              onClick={() => {
-                setOpenSelector(true);
-              }}
-            >
-              Choose category
-            </Label>
+            <Label wait={loading}>Choose category</Label>
           )}
         </LabelContainer>
-        {isOpenSelector && (
+        {!isHide && !loading && (
           <Dropdown>
             <ul>
               {data.category.descendants.map(cat => (

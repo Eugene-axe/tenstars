@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { puls, pulsOpacity } from './keyframes';
+import { puls, pulsOpacity, blink } from './keyframes';
 
 export const invalidError = css`
   border-color: hsla(0deg 50% 50% / 0.4);
@@ -49,4 +49,23 @@ export const neutralTheme = css`
     hsla(170deg 7% 82% / 0.7)
   );
   color: hsl(170deg 7% 50%);
+`;
+
+export const loaderBlinkBefore = css`
+  ::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -150px;
+    top: 0;
+    height: 100%;
+    width: 150px;
+    background: linear-gradient(
+      85deg,
+      transparent 20%,
+      #e8e8e8 50%,
+      transparent 80%
+    );
+    animation: ${blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  }
 `;

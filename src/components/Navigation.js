@@ -126,7 +126,7 @@ const Navigation = props => {
     <Nav
       isHide={isHide}
       onBlur={event => {
-        if (!event.relatedTarget) setHide(true);
+        if (!event.currentTarget.contains(event.relatedTarget)) setHide(true);
       }}
     >
       <ButtonToggle

@@ -32,8 +32,9 @@ const Categories = () => {
   return (
     <Wrapper
       onBlur={event => {
-        if (!event.relatedTarget) setHide(true);
+        if (!event.currentTarget.contains(event.relatedTarget)) setHide(true);
       }}
+      autoFocus={!isHide}
     >
       <ButtonToggle
         onClick={() => {
