@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { ButtonPositive, ButtonDanger } from './elements';
 import ButtonSecondary from './elements/ButtonSecondary';
 
+
 const Ul = styled.ul`
   list-style-type: none;
   @media (max-width: 450px) {
-    display: ${props => (props.isHide ? 'none' : 'block')};
+    height: ${props => (props.isHide ? '0px' : 'auto')};
   }
 `;
 
@@ -21,7 +22,8 @@ const Vertex = styled.li`
 `;
 
 const CategoriesFeed = props => {
-  const { category, setId, isRoot, isHide } = props;
+  const { category, setId, isRoot, isHide, categoriesWrapper } = props;
+  useEffect(()=>{ !isHide && categoriesWrapper.focus()})
   const linkBack =
     category.directAncestor === process.env.CAT_ID
       ? '/'

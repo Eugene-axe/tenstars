@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useQuery } from '@apollo/client';
 import { GET_CATEGORY } from '../client/query';
@@ -23,6 +23,10 @@ const ButtonToggle = styled(ButtonSecondary)`
 
 const Categories = () => {
   const basisCatId = process.env.CAT_ID;
+  useEffect(() => {
+    !isHide && wrapperRef.current.focus();
+  });
+  const wrapperRef = useRef();
   const [isHide, setHide] = useState(true);
   const [id, setId] = useState(basisCatId);
   const { data, loading, error } = useQuery(GET_CATEGORY, {
@@ -31,10 +35,10 @@ const Categories = () => {
   if (error) return <p>Errorka</p>;
   return (
     <Wrapper
+      ref={wrapperRef}
       onBlur={event => {
         if (!event.currentTarget.contains(event.relatedTarget)) setHide(true);
       }}
-      autoFocus={!isHide}
     >
       <ButtonToggle
         onClick={() => {
@@ -51,6 +55,7 @@ const Categories = () => {
           category={data.category}
           setId={setId}
           isRoot={id === basisCatId}
+          categoriesWrapper={wrapperRef.current}
         />
       )}
     </Wrapper>

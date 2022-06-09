@@ -41,6 +41,7 @@ client.writeQuery({
 });
 
 client.onResetStore(() => {
+  console.log('resetStore')
   client.writeQuery({
     query: SET_IS_LOGGED_IN,
     data: data

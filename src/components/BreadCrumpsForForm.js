@@ -6,7 +6,6 @@ import { Wrapper, Item } from './BreadCrumps';
 
 const Wrapper2 = styled(Wrapper)``;
 const Item2 = styled(Item)`
-  ${'' /* margin: 0.35em 0; */}
   span {
     display: inline-block;
     padding: 0.4em 0.7em;
@@ -35,9 +34,9 @@ const Crumbs = props => {
 };
 
 const BreadCrumbsForForm = props => {
-  const { path, setId } = props;
+  const { path, trimmCats } = props;
   const goTo = id => {
-    setId(id);
+    trimmCats(id);
   };
   return (
     <Wrapper2>

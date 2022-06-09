@@ -11,6 +11,7 @@ import uploadImage from '../rest/loadImage';
 
 const FormThing = props => {
   const imgbanskey = process.env.IMG_BAN_SKEY;
+  const basicCatId = process.env.CAT_ID;
   const title = useRef();
   const description = useRef();
   const rating = useRef();
@@ -18,7 +19,7 @@ const FormThing = props => {
     title: props.thing?.title || '',
     description: props.thing?.description || '',
     rating: +props.thing?.rating || 0,
-    category: props.thing?.category || [''],
+    category: props.thing?.category || ["", basicCatId],
     image: props.thing?.image || null,
     public: props.thing?.public || false
   });
@@ -109,9 +110,10 @@ const FormThing = props => {
           </li>
           <li>
             <CategorySelection
-              setValues={category => {
+              setCategories={category => {
                 setValues({ ...values, category });
               }}
+              categories={values.category}
             />
           </li>
           <li>
@@ -334,11 +336,11 @@ const PublicToggle = styled.label`
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
   }
   &:after {
-    content: 'PUBLIC';
+    content: 'ALL';
     left: ${props => (props.public ? '0%' : '100%')};
   }
   &:before {
-    content: 'PRIVATE';
+    content: 'ONLY ME';
     left: ${props => (props.public ? '-100%' : '0%')};
   }
   :active:before {

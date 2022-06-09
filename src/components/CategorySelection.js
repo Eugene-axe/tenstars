@@ -15,9 +15,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   z-index: 2;
-  &:focus {
-    border: 3px solid black;
-  }
   * {
     trnsition: all 0.2s ease;
   }
@@ -64,8 +61,8 @@ const Label = styled.div`
     right: 1em;
     transform: translateY(-50%);
   }
-  opacity: ${({wait})=> wait ? "0.5" : "1"}
-  ${({wait}) => wait && loaderBlinkBefore }
+  opacity: ${({ wait }) => (wait ? '0.5' : '1')}
+    ${({ wait }) => wait && loaderBlinkBefore};
 `;
 const Dropdown = styled.div`
   max-height: calc(1.5em * 4);
@@ -86,36 +83,44 @@ const Dropdown = styled.div`
     }
   }
 `;
+
+const arrayTrimmedByValue = (value, array) => {
+  const index = array.indexOf(value);
+  console.group('arrayTrimmedByValue')
+  console.log(array);
+  trimArray = array.slice(0 , index+1); 
+  console.log('index ', index);
+  console.log(trimArray);
+  console.groupEnd();
+  return trimArray;
+};
+
 const CategorySelection = props => {
-  const basisCatId = process.env.CAT_ID;
+  const lastIdCategories = props.categories[props.categories.length - 1];
   const [isHide, setHide] = useState(true);
-  const [idCurCat, setIdCurCat] = useState(basisCatId);
   const [newTitle, setNewTitle] = useState('');
   const titleCat = useRef();
   const wrapper = useRef();
   useEffect(() => {
-    console.log(wrapper);
     !isHide && wrapper.current.focus();
   });
   const { setAlert } = useAlert();
   const { validate, errors, isPermit } = useValidate();
   const [newCategory] = useMutation(NEW_CATEGORY, {
     onCompleted: data => {
-      setIdCurCat(data.newCategory._id);
+      props.setCategories([...props.categories, data.newCategory._id]);
     },
     refetchQueries: [
       {
         query: GET_CATEGORY,
-        variables: { id: idCurCat }
+        variables: { id: lastIdCategories }
       }
     ]
   });
-  const { data, loading, error, client } = useQuery(GET_CATEGORY, {
-    variables: { id: idCurCat },
-    onCompleted: data => {
-      props.setValues([...data.category.ancestors, data.category._id]);
-    }
+  const { data, loading, error } = useQuery(GET_CATEGORY, {
+    variables: { id: lastIdCategories }
   });
+
   const onClickAdd = event => {
     if (!newTitle) {
       titleCat.current.focus();
@@ -126,7 +131,7 @@ const CategorySelection = props => {
       return;
     }
     newCategory({
-      variables: { directAncestor: idCurCat, title: newTitle }
+      variables: { directAncestor: lastIdCategories, title: newTitle }
     });
     setNewTitle('');
     setHide(true);
@@ -138,19 +143,17 @@ const CategorySelection = props => {
     <Wrapper
       ref={wrapper}
       onBlur={event => {
-        console.log('blur');
         if (!event.currentTarget.contains(event.relatedTarget)) setHide(true);
-      }}
-      onFocus={e => {
-        console.log('focus');
       }}
     >
       <Path>
         <BreadCrumbsForForm
-          path={
-            loading ? [''] : [...data.category.ancestors, data.category._id]
-          }
-          setId={setIdCurCat}
+          path={loading ? [''] : props.categories}
+          trimmCats={id => {
+            const trimmedCats = arrayTrimmedByValue(id, props.categories);
+            console.log(trimmedCats);
+            props.setCategories(trimmedCats);
+          }}
         />
       </Path>
       <Selection
@@ -199,7 +202,7 @@ const CategorySelection = props => {
                 <li
                   key={cat._id}
                   onClick={() => {
-                    setIdCurCat(cat._id);
+                    props.setCategories([...props.categories, cat._id]);
                   }}
                 >
                   {cat.title}

@@ -46,6 +46,7 @@ const Pages = () => {
         <Layout>
           <Route
             path={['/', `/category/${process.env.CAT_ID}`]}
+            // path="/"
             exact
             component={Home}
           />
