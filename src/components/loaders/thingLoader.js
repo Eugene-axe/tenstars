@@ -4,6 +4,7 @@ import { blink } from '../styled/keyframes';
 
 const Wrapper = styled.div`
   --field-color: hsl(209deg 16% 88%);
+  min-height: 100%;
   color: var(--field-color);
   overflow: hidden;
   position: relative;

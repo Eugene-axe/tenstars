@@ -112,14 +112,14 @@ const Navigation = props => {
   const [isHide, setHide] = useState(true);
   const { setAlert } = useAlert();
   const logOut = event => {
-    localStorage.removeItem('token'); 
+    localStorage.removeItem('token');
     setAlert('Пока! Заходи еще!😩', NEUTRAL);
     client.resetStore();
     client.writeQuery({
       query: SET_IS_LOGGED_IN,
       data: { isLoggedIn: false }
     });
-      props.history.push('/');
+    props.history.push('/');
   };
 
   return (

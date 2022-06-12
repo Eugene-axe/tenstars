@@ -1,11 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { useQuery, useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import logo from '../img/logo.svg';
 import { ME } from '../client/query';
-import { IS_LOGGED_IN, SET_IS_LOGGED_IN } from '../client/cache';
 
 const HeaderPage = styled.header`
   border-bottom: 2px solid black;
@@ -74,15 +73,9 @@ const Title = styled.div`
   }
 `;
 
-const Welcome = props => {
-  const { data } = useQuery(ME);
-  return <h3>Welcome, {data?.me ? data.me.name : 'Guest'}!</h3>;
-};
-
 const Header = props => {
-  const client = useApolloClient();
-  const { isLoggedIn } = client.readQuery({ query: IS_LOGGED_IN });
-  const goPage = page => props.history.push(page);
+  const { data: dataMe } = useQuery(ME);
+  const isLoggedIn = dataMe && localStorage.getItem('token');
   return (
     <HeaderPage>
       <Cap>
@@ -95,10 +88,10 @@ const Header = props => {
         />
         <Title>
           <h1>Things Rating</h1>
-          {isLoggedIn ? <Welcome goPage={goPage} /> : <h3>{''}</h3>}
+          <h3>Welcome , {isLoggedIn ? dataMe.me.name : 'Guest'} !</h3>
         </Title>
       </Cap>
-      <Navigation client={client} isLoggedIn={isLoggedIn} />
+      <Navigation isLoggedIn={isLoggedIn} />
     </HeaderPage>
   );
 };

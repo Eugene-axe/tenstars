@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -15,17 +15,15 @@ import NewThing from './newThing';
 import ThingPage from './thing';
 import EditThing from './editThing';
 import { useQuery } from '@apollo/client';
-import { IS_LOGGED_IN } from '../client/query';
+import { ME } from '../client/query';
+import { SET_USER } from '../client/cache';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { loading, error, data } = useQuery(IS_LOGGED_IN);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Somithing errorki with PrivateRouter</p>;
+const PrivateRoute = ({ component: Component, condition, ...rest }) => {
   return (
     <Route
       {...rest}
       render={props =>
-        data.isLoggedIn === true ? (
+        condition === true ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -38,10 +36,25 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 const Pages = () => {
+  const [condition, setCondition] = useState(!!localStorage.getItem('token'));
+  const { data } = useQuery(ME, {
+    onCompleted: () => {
+      setCondition(true);
+    },
+    onError: error => {
+      localStorage.removeItem('token');
+      setCondition(false);
+    }
+  });
+
+
   return (
     <Router>
       <Switch>
-        <Route path="/signin" component={SignIn} />
+        <Route
+          path="/signin"
+          render={props => <SignIn setCondition={setCondition} {...props} />}
+        />
         <Route path="/signup" component={SignUp} />
         <Layout>
           <Route
@@ -52,9 +65,17 @@ const Pages = () => {
           />
           <Route path="/category/:id" component={Category} />
           <Route path="/thing/:id" component={ThingPage} />
-          <PrivateRoute path="/my" component={MyThings} />
-          <PrivateRoute path="/new" component={NewThing} />
-          <PrivateRoute path="/edit/:id" component={EditThing} />
+          <PrivateRoute path="/my" component={MyThings} condition={condition} />
+          <PrivateRoute
+            path="/new"
+            component={NewThing}
+            condition={condition}
+          />
+          <PrivateRoute
+            path="/edit/:id"
+            component={EditThing}
+            condition={condition}
+          />
         </Layout>
       </Switch>
     </Router>

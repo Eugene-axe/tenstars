@@ -11,13 +11,15 @@ export const Wrapper = styled.ul`
   margin: 1em;
 `;
 export const Item = styled.li`
-cursor: pointer;
+  cursor: pointer;
   transform: skewX(-5deg);
   background-color: hsl(170deg 7% 82%);
   box-shadow: -2px 0px 10px -6px rgba(0, 0, 0, 0.5);
   z-index: 1;
   margin-left: -20px;
   transition: all 0.5s;
+  display: flex;
+  align-items: center;
 
   &:first-child {
     margin-left: 0px;
@@ -40,13 +42,13 @@ cursor: pointer;
   }
   a {
     display: block;
-    padding: 10px;
-    font-size: 20px;
+    padding: 5px 10px;
     transform: skewX(15deg);
     text-decoration: none;
     color: #444;
     font-weight: 300;
-    &:link, &:visited {
+    &:link,
+    &:visited {
       color: inherit;
     }
   }

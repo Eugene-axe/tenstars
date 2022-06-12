@@ -11,7 +11,6 @@ import {
 } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
 import { AlertProvider } from './AlertContext';
-import { SET_IS_LOGGED_IN } from './client/cache';
 
 const uri = process.env.API_URI;
 const httpLink = createHttpLink({ uri });
@@ -31,21 +30,8 @@ const client = new ApolloClient({
   connectdevTools: true
 });
 
-const data = {
-  isLoggedIn: !!localStorage.getItem('token')
-};
-
-client.writeQuery({
-  query: SET_IS_LOGGED_IN,
-  data: data
-});
-
 client.onResetStore(() => {
-  console.log('resetStore')
-  client.writeQuery({
-    query: SET_IS_LOGGED_IN,
-    data: data
-  });
+  localStorage.removeItem('token');
 });
 const App = () => {
   return (

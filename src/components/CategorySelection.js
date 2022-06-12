@@ -86,12 +86,7 @@ const Dropdown = styled.div`
 
 const arrayTrimmedByValue = (value, array) => {
   const index = array.indexOf(value);
-  console.group('arrayTrimmedByValue')
-  console.log(array);
   trimArray = array.slice(0 , index+1); 
-  console.log('index ', index);
-  console.log(trimArray);
-  console.groupEnd();
   return trimArray;
 };
 
@@ -151,7 +146,6 @@ const CategorySelection = props => {
           path={loading ? [''] : props.categories}
           trimmCats={id => {
             const trimmedCats = arrayTrimmedByValue(id, props.categories);
-            console.log(trimmedCats);
             props.setCategories(trimmedCats);
           }}
         />

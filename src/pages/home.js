@@ -11,8 +11,12 @@ const Home = props => {
     }
   });
   if (error) {
-    console.log(error);
-    return <p>Error query "ThingsFeed"</p>;
+    return (
+      <p>
+        The server was unable to respond to your request and display a feed of
+        things
+      </p>
+    );
   }
 
   return (
