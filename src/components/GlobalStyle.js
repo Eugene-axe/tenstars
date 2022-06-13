@@ -1,7 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import normalize from 'normalize.css';
 
-
 export default createGlobalStyle`
     ${normalize}
    
@@ -9,6 +8,10 @@ export default createGlobalStyle`
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+        --bg-positive: linear-gradient(to right, hsl(47deg 40% 50%), hsl(40deg 40% 56%));
+        --bg-danger: linear-gradient(to right, hsl(21deg 40% 50%), hsl(26deg 40% 56%));
+        --bg-negative: linear-gradient( to right, hsl(230deg 30% 60%), hsl(218deg 30% 50%));
+        --bg-secondary: linear-gradient(to right, hsl(62deg 76% 67%), hsl(48deg 32% 60%));
     }
     body, 
     html {
@@ -34,5 +37,8 @@ export default createGlobalStyle`
     code, 
     pre {
         max-width: 100%;
+    }
+    input {
+        min-width: 50px;
     }
 `;

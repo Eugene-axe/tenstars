@@ -1,18 +1,12 @@
 import styled from 'styled-components';
+import { ButtonWrapper } from '../styled/additionalStyles';
 
 const ButtonSecondary = styled.button`
+  ${ButtonWrapper}
   flex: 1;
-  padding: 0.6em;
-  text-align: center;
-  font-size: 1em;
-  color: white;
-  box-shadow: 0 0 3px black;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  outline: none;
+  ${'' /* background: linear-gradient(to right, hsl(62deg 76% 67%), hsl(48deg 32% 60%)); */}
+  background: var(--bg-secondary);
 
-  background: linear-gradient(to right,hsl(62deg 76% 67%),hsl(48deg 32% 60%));
   &:hover {
     background: linear-gradient(
       to right,
@@ -21,7 +15,11 @@ const ButtonSecondary = styled.button`
     );
   }
   &:disabled {
-    background: linear-gradient(to right,hsl(47deg 24% 70%),hsl(40deg 25% 65%));
+    background: linear-gradient(
+      to right,
+      hsl(47deg 24% 70%),
+      hsl(40deg 25% 65%)
+    );
   }
 `;
 

@@ -1,18 +1,10 @@
 import styled from 'styled-components';
 import { blink } from '../styled/keyframes';
-
+import { ButtonWrapper } from '../styled/additionalStyles';
 
 const ButtonLoad = styled.button`
+  ${ButtonWrapper}
   flex: 1;
-  padding: 0.6em;
-  text-align: center;
-  font-size: 1em;
-  color: hsla(0deg 0% 100% / 0.3);
-  box-shadow: 0 0 3px black;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  outline: none;
   background: linear-gradient(to right, hsl(47deg 14% 75%), hsl(40deg 15% 70%));
   overflow: hidden;
   position: relative;

@@ -69,3 +69,17 @@ export const loaderBlinkBefore = css`
     animation: ${blink} 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
   }
 `;
+
+export const ButtonWrapper = css`
+  padding: 0.6em;
+  text-align: center;
+  font-size: 1em;
+  color: white;
+  box-shadow: 0 0 3px black;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+`;
+
+export const categoriesInputDataListAddStyle = css``;

@@ -102,6 +102,21 @@ export const GET_CATEGORIES = gql`
   }
 `;
 
+export const GET_ALL_CATEGORIES = gql`
+  query allCategories {
+    allCategories {
+      _id
+      title
+      directAncestor
+      ancestors
+      descendants {
+        _id
+        title
+      }
+    }
+  }
+`;
+
 export const GET_CATEGORY = gql`
   query category($id: ID, $ancestor: ID) {
     category(id: $id, ancestor: $ancestor) {

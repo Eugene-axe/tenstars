@@ -9,6 +9,7 @@ import LoadCategoryFeed from './loaders/loadCategoryFeed';
 
 const Wrapper = styled.div`
   overflow-x: hidden;
+  height: 100%;
   & > * {
     width: 100%;
   }
@@ -51,6 +52,7 @@ const Categories = () => {
         <LoadCategoryFeed isHide={isHide} />
       ) : (
         <CategoriesFeed
+          setHide={setHide}
           isHide={isHide}
           category={data.category}
           setId={setId}

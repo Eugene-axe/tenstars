@@ -15,7 +15,7 @@ export default function() {
     return permit;
   }
 
-  function validate({ conditions, value, name }) {
+  function validate({ conditions = {}, value, name }) {
     if (conditions.require) {
       if (!value) {
         setErrors({ ...errors, [name]: true });

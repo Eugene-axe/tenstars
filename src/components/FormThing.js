@@ -220,7 +220,7 @@ const Form = styled.form`
   margin: 1em;
   display: flex;
   flex-direction: column;
-  height: 700px;
+  ${'' /* height: 700px; */}
   border: 2px solid black;
   border-radius: 0.5em;
   box-shadow: 2px 2px 3px gray;
@@ -241,8 +241,8 @@ const Form = styled.form`
   }
 `;
 const ImageContainer = styled.div`
-  min-height: 150px;
-  flex: 1;
+  flex: 1 250px;
+  display: flex;
   border-top-left-radius: 0.4em;
   border-top-right-radius: 0.4em;
   overflow: hidden;

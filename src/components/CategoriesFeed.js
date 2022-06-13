@@ -3,10 +3,13 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { ButtonPositive, ButtonDanger } from './elements';
 import ButtonSecondary from './elements/ButtonSecondary';
-
+import InputDatalist from './InputDatalist';
+import { GET_ALL_CATEGORIES } from '../client/query';
+import { useQuery } from '@apollo/client';
 
 const Ul = styled.ul`
   list-style-type: none;
+  height: 100%;
   @media (max-width: 450px) {
     height: ${props => (props.isHide ? '0px' : 'auto')};
   }
@@ -22,9 +25,14 @@ const Vertex = styled.li`
 `;
 
 const CategoriesFeed = props => {
-  const { category, setId, isRoot, isHide, categoriesWrapper } = props;
-  useEffect(()=>{ !isHide && categoriesWrapper.focus()})
-  const linkBack =
+  const { category, setId, isRoot, isHide, categoriesWrapper, setHide } = props;
+  useEffect(() => {
+    !isHide && categoriesWrapper.focus();
+  });
+
+  const { data, loading } = useQuery(GET_ALL_CATEGORIES);
+
+  const hrefBack =
     category.directAncestor === process.env.CAT_ID
       ? '/'
       : `/category/${category.directAncestor}`;
@@ -35,9 +43,34 @@ const CategoriesFeed = props => {
   const goToLink = path => {
     props.history.push(path);
   };
+  const goToCategory = cat => {
+    setId(cat.descendants.length ? cat._id : cat.directAncestor);
+    setHide(true);
+    goToLink(`/category/${cat._id}`);
+  };
+
+  const categoriesList = loading ? [] : data.allCategories;
 
   return (
     <Ul isHide={isHide}>
+      <li>
+        <InputDatalist
+          loading={loading}
+          list={categoriesList}
+          labelText={'Search category'}
+          inputPlaceholder={'Title'}
+          actionWithReturnValue={cat => {
+            goToCategory(cat);
+          }}
+          actionWithNewValue={title => {
+            const targetCat = categoriesList.find(cat => cat.title === title);
+            if (targetCat) {
+              goToCategory(targetCat);
+            }
+          }}
+          actionIcon="&#9998;"
+        />
+      </li>
       {!isRoot && (
         <Node
           onClick={onBack}
@@ -46,7 +79,7 @@ const CategoriesFeed = props => {
             marginBottom: '3px'
           }}
         >
-          <ButtonDanger onClick={() => goToLink(linkBack)}>Back</ButtonDanger>
+          <ButtonDanger onClick={() => goToLink(hrefBack)}>Back</ButtonDanger>
         </Node>
       )}
       {category.descendants.map(cat => {
