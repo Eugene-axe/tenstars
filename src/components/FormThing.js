@@ -19,8 +19,8 @@ const FormThing = props => {
     title: props.thing?.title || '',
     description: props.thing?.description || '',
     rating: +props.thing?.rating || 0,
-    category: props.thing?.category || ["", basicCatId],
-    image: props.thing?.image || null,
+    category: props.thing?.category || ['', basicCatId],
+    images: props.thing?.images || [],
     public: props.thing?.public || false
   });
   const { validate, errors, isPermit } = useValidate();
@@ -40,7 +40,7 @@ const FormThing = props => {
     try {
       const data = await uploadImage(fd);
       if (data.success) {
-        setValues({ ...values, image: data.data.link });
+        setValues({ ...values, images: [...values.images, data.data.link] });
       } else {
         throw new Error('File are no appload');
       }
@@ -80,7 +80,7 @@ const FormThing = props => {
   return (
     <Form onSubmit={onSubmit}>
       <ImageContainer>
-        <ThingImage image={values.image} />
+        <ThingImage image={values.images[1]} />
       </ImageContainer>
       <Fieldset>
         <legend>Create thing card</legend>
@@ -183,12 +183,15 @@ const FormThing = props => {
               <span>{values.rating}</span>
             </RatingContainer>
           </li>
-          <InputFileContainer>
-            <label htmlFor="thing-image">Image</label>
+          <InputFileContainer max={values.images.length >= 3}>
+            <label htmlFor="thing-image">
+              {values.images.length >= 3 ? 'Max amount images' : 'Add image'}
+            </label>
             <input
               type="file"
               name="image"
               id="thing-image"
+              disabled={values.images.length >= 3}
               onChange={onImage}
             />
           </InputFileContainer>
@@ -449,12 +452,13 @@ const InputFileContainer = styled.li`
     box-shadow: 0 0 1px black;
     cursor: pointer;
     transition: all 0.3s ease;
+    ${props => props.max && 'color : gray'};
   }
   label:hover {
-    background: hsl(35deg 40% 95%);
+    ${props => props.max && 'background: hsl(35deg 40% 95%)'};
   }
   label:active {
-    background: hsl(35deg 40% 85%);
+    ${props => props.max && 'background: hsl(35deg 40% 85%)'};
   }
 `;
 const ButtonContainer = styled.li`

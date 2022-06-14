@@ -16,9 +16,9 @@ import ThingPage from './thing';
 import EditThing from './editThing';
 import { useQuery } from '@apollo/client';
 import { ME } from '../client/query';
-import { SET_USER } from '../client/cache';
 
 const PrivateRoute = ({ component: Component, condition, ...rest }) => {
+
   return (
     <Route
       {...rest}
@@ -46,7 +46,6 @@ const Pages = () => {
       setCondition(false);
     }
   });
-
 
   return (
     <Router>
