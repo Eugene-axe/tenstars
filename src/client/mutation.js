@@ -17,7 +17,7 @@ export const NEW_THING = gql`
     $description: String!
     $rating: Int!
     $title: String!
-    $image: [String]
+    $images: [String]
     $category: [ID]!
     $public: Boolean
   ) {
@@ -25,7 +25,7 @@ export const NEW_THING = gql`
       title: $title
       description: $description
       rating: $rating
-      image: $image
+      images: $images
       category: $category
       public: $public
     ) {
@@ -50,7 +50,7 @@ export const UPDATE_THING = gql`
     $title: String
     $description: String
     $category: [ID]
-    $image: [String]
+    $images: [String]
     $public: Boolean
   ) {
     updateThing(
@@ -60,13 +60,13 @@ export const UPDATE_THING = gql`
       description: $description
       category: $category
       public: $public
-      image: $image
+      images: $images
     ) {
       _id
       title
       description
       rating
-      image
+      images
       category
       public
       author {

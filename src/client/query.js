@@ -10,7 +10,7 @@ export const GET_THINGS = gql`
         title
         description
         rating
-        image
+        images
         category
         public
         author {
@@ -34,7 +34,7 @@ export const GET_MY_THINGS = gql`
         title
         description
         rating
-        image
+        images
         category
         public
         author {
@@ -55,7 +55,7 @@ export const GET_THING = gql`
       title
       description
       rating
-      image
+      images
       category
       public
       author {

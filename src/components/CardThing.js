@@ -1,10 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { withRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_CATEGORY } from '../client/query';
 import { ThingImage, Star, StarActive } from './elements';
+
+const CardThing = props => {
+  const { thing } = props;
+  const { data: categoryData, loading } = useQuery(GET_CATEGORY, {
+    variables: { id: thing.category[thing.category.length - 1] }
+  });
+  const description =
+    thing.description.length > 60
+      ? thing.description.slice(0, 60) + '...'
+      : thing.description;
+  const nStarActive = Number(thing.rating);
+  const nStar = 10 - nStarActive;
+  return (
+    <Card
+      key={thing._id}
+      onClick={() => {
+        props.history.push(`/thing/${thing._id}`);
+      }}
+    >
+      <ImageContainer>
+        <ThingImage
+          categoryName={loading ? 'loading...' : categoryData?.category.title}
+          image={thing.images[0]}
+        />
+      </ImageContainer>
+      <List>
+        <li>
+          <Title>{thing.title || 'title none'}</Title>
+        </li>
+        <Rating>
+          {new Array(nStarActive).fill(null).map((item, i) => (
+            <StarActive key={i} />
+          ))}
+          {nStar > 0 &&
+            new Array(nStar).fill(null).map((item, i) => <Star key={i} />)}
+        </Rating>
+        <Description>
+          <p>{description || 'Descripton empty'}</p>
+        </Description>
+        <Info>
+          <span>By: {thing.author.username || 'unknown author'}</span>
+          <span>{dayjs(thing.createdAt).format('DD.MM.YY')}</span>
+        </Info>
+      </List>
+    </Card>
+  );
+};
+
+export default withRouter(CardThing);
 
 const Card = styled.div`
   display: flex;
@@ -77,57 +126,3 @@ const Info = styled.li`
   justify-content: space-between;
   font-size: 0.8em;
 `;
-
-const CardThing = props => {
-  const { thing } = props;
-  const { data: categoryData, loading } = useQuery(GET_CATEGORY, {
-    variables: { id: thing.category[thing.category.length - 1] }
-  });
-  const description =
-    thing.description.length > 60
-      ? thing.description.slice(0, 60) + '...'
-      : thing.description;
-  const nStarActive = Number(thing.rating);
-  const nStar = 10 - nStarActive;
-  return (
-    <Card
-      key={thing._id}
-      onClick={() => {
-        props.history.push(`/thing/${thing._id}`);
-      }}
-    >
-      <ImageContainer>
-        <ThingImage
-          categoryName={loading ? 'loading...' : categoryData?.category.title}
-          image={thing.image}
-        />
-      </ImageContainer>
-      <List>
-        <li>
-          <Title>{thing.title || 'title none'}</Title>
-        </li>
-        <Rating>
-          {new Array(nStarActive).fill(null).map((item, i) => (
-            <StarActive key={i} />
-          ))}
-          {nStar > 0 &&
-            new Array(nStar).fill(null).map((item, i) => <Star key={i} />)}
-        </Rating>
-        <Description>
-          <p>{description || 'Descripton empty'}</p>
-        </Description>
-        <Info>
-          <span>By: {thing.author.username || 'unknown author'}</span>
-          <span>{dayjs(thing.createdAt).format('DD.MM.YY')}</span>
-        </Info>
-        {/* <ButtonMore
-          onClick={event => props.history.push(`/thing/${thing._id}`)}
-        >
-          <span>More</span>
-        </ButtonMore> */}
-      </List>
-    </Card>
-  );
-};
-
-export default withRouter(CardThing);

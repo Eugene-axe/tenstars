@@ -80,7 +80,7 @@ const FormThing = props => {
   return (
     <Form onSubmit={onSubmit}>
       <ImageContainer>
-        <ThingImage image={values.images[1]} />
+        <ThingImage image={values.images[values.images.length-1]} />
       </ImageContainer>
       <Fieldset>
         <legend>Create thing card</legend>
@@ -183,7 +183,7 @@ const FormThing = props => {
               <span>{values.rating}</span>
             </RatingContainer>
           </li>
-          <InputFileContainer max={values.images.length >= 3}>
+          <InputFileContainer maxCount={values.images.length >= 3}>
             <label htmlFor="thing-image">
               {values.images.length >= 3 ? 'Max amount images' : 'Add image'}
             </label>
@@ -452,13 +452,13 @@ const InputFileContainer = styled.li`
     box-shadow: 0 0 1px black;
     cursor: pointer;
     transition: all 0.3s ease;
-    ${props => props.max && 'color : gray'};
+    ${props => props.maxCount && 'color : gray'};
   }
   label:hover {
-    ${props => props.max && 'background: hsl(35deg 40% 95%)'};
+    ${props => props.maxCount && 'background: hsl(35deg 40% 95%)'};
   }
   label:active {
-    ${props => props.max && 'background: hsl(35deg 40% 85%)'};
+    ${props => props.maxCount && 'background: hsl(35deg 40% 85%)'};
   }
 `;
 const ButtonContainer = styled.li`

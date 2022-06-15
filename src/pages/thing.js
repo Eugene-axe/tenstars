@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { useMutation, useQuery } from '@apollo/client';
@@ -16,6 +16,117 @@ import ThingLoader from '../components/loaders/thingLoader';
 import ButtonImportantAction from '../components/elements/ButtonImportantAction';
 import useAlert from '../hooks/useAlert';
 import { NEGATIVE, POSITIVE } from '../const';
+
+const getArrayNoLess3 = arr => {
+  const addArray = [];
+  addArray.length = 3;
+  addArray.fill(undefined);
+  const wideArray = arr.concat(addArray);
+  return wideArray.slice(0, 3);
+};
+
+const ThingPage = props => {
+  const id = props.match.params.id;
+
+  useEffect(() => {
+    document.title = 'Вещь - Thing Rating';
+  }, []);
+  const [imgMain, setImgMain] = useState('');
+  const { setAlert } = useAlert();
+  const [deleteThing] = useMutation(DELETE_THING, {
+    onCompleted: data => {
+      setAlert('Thing deleted', POSITIVE);
+      props.history.push('/');
+    },
+    onError: error => {
+      setAlert(error.message, NEGATIVE);
+    },
+    refetchQueries: [
+      {
+        query: GET_THINGS,
+        variables: {
+          category: ''
+        }
+      }
+    ]
+  });
+
+  const { data, error, loading } = useQuery(GET_THING, {
+    variables: { _id: id },
+    onCompleted: ({ thing }) => {
+      setImgMain(thing.images[0]);
+    }
+  });
+
+  if (loading) return <ThingLoader />;
+  if (error) return <p>Error find thing</p>;
+  const thing = data.thing;
+
+  const nActiveStar = Number(thing.rating);
+  const nStar = 10 - thing.rating;
+  const date = dayjs(thing.createdAt).format('DD.MM.YYYY [at] HH:mm:ss');
+
+  return (
+    <Wrapper>
+      <PathContainer>
+        <BreadCrumbs catList={thing.category} />
+      </PathContainer>
+      <Title>{thing.title}</Title>
+      <RatingContainer>
+        <RatingStars>
+          {new Array(nActiveStar).fill(null).map((item, i) => (
+            <StarActive key={i} />
+          ))}
+          {nStar > 0 &&
+            new Array(nStar).fill(null).map((item, i) => <Star key={i} />)}
+        </RatingStars>
+        <p className="rating-num">
+          <span className="r-num">{thing.rating}</span> / 10
+        </p>
+      </RatingContainer>
+      <Description>{thing.description}</Description>
+      <Footer>
+        <span>By: {thing.author.username}</span>
+        <span>{date}</span>
+      </Footer>
+      <Figure image={imgMain}></Figure>
+      <PreviewImage>
+        {getArrayNoLess3(thing.images).map((src, i) => (
+          <Minipic
+            key={i}
+            bgImage={src}
+            onClick={() => {
+              setImgMain(src);
+            }}
+          />
+        ))}
+      </PreviewImage>
+      <Buttons>
+        <ButtonNegative
+          onClick={() => {
+            props.history.push('/');
+          }}
+        >
+          Leave
+        </ButtonNegative>
+        <ButtonImportantAction
+          action={() => deleteThing({ variables: { id: id } })}
+        >
+          Delete
+        </ButtonImportantAction>
+        <ButtonPositive
+          onClick={() => {
+            props.history.push(`/edit/${id}`);
+          }}
+        >
+          Edit
+        </ButtonPositive>
+      </Buttons>
+    </Wrapper>
+  );
+};
+
+export default ThingPage;
 
 const Wrapper = styled.div`
   min-height: 100%;
@@ -135,34 +246,26 @@ const PreviewImage = styled.div`
   grid-area: preview;
   display: flex;
 
-  .pic1 {
-    background: center / contain no-repeat url('${props =>
-      props.image || defaultImg}');
-  }
-  .pic2 {
-    background: center / contain no-repeat url('${props =>
-      props.image || defaultImg}');
-  }
-  .pic3 {
-    background: center / contain no-repeat url('${props =>
-      props.image || defaultImg}');
-  }
   & > div + div {
     margin-left: 0.5em;
   }
-  & > div {
-    flex: 1;
-    height: 100%;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    border: 1px solid hsl(205deg 90% 80%);
-    border-radius: 0.2em;
-  }
-  & > div:hover {
+`;
+
+const Minipic = styled.div`
+  background: center / cover no-repeat url('${props =>
+    props.bgImage || defaultImg}');
+  flex: 1;
+  height: 100%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: 1px solid hsl(205deg 90% 80%);
+  border-radius: 0.2em;
+  :hover {
     background-color: #678;
     background-blend-mode: soft-light;
   }
 `;
+
 const Buttons = styled.div`
   grid-area: buttons;
   display: flex;
@@ -172,96 +275,3 @@ const Buttons = styled.div`
     flex: 1;
   }
 `;
-
-const ThingPage = props => {
-  const id = props.match.params.id;
-
-  useEffect(() => {
-    document.title = 'Вещь - Thing Rating';
-  }, []);
-  const { setAlert } = useAlert();
-  const [deleteThing] = useMutation(DELETE_THING, {
-    onCompleted: data => {
-      setAlert('Thing deleted', POSITIVE);
-      props.history.push('/');
-    },
-    onError: error => {
-      setAlert(error.message , NEGATIVE)
-    },
-    refetchQueries: [
-      {
-        query: GET_THINGS,
-        variables: {
-          category: ''
-        }
-      }
-    ]
-  });
-
-  const { data, error, loading } = useQuery(GET_THING, {
-    variables: { _id: id }
-  });
-
-  if (loading) return <ThingLoader />;
-  if (error) return <p>Error find thing</p>;
-  const thing = data.thing;
-
-  const nActiveStar = Number(thing.rating);
-  const nStar = 10 - thing.rating;
-  const date = dayjs(thing.createdAt).format('DD.MM.YYYY [at] HH:mm:ss');
-
-  return (
-    <Wrapper>
-      <PathContainer>
-        <BreadCrumbs catList={thing.category} />
-      </PathContainer>
-      <Title>{thing.title}</Title>
-      <RatingContainer>
-        <RatingStars>
-          {new Array(nActiveStar).fill(null).map((item, i) => (
-            <StarActive key={i} />
-          ))}
-          {nStar > 0 &&
-            new Array(nStar).fill(null).map((item, i) => <Star key={i} />)}
-        </RatingStars>
-        <p className="rating-num">
-          <span className="r-num">{thing.rating}</span> / 10
-        </p>
-      </RatingContainer>
-      <Description>{thing.description}</Description>
-      <Footer>
-        <span>By: {thing.author.username}</span>
-        <span>{date}</span>
-      </Footer>
-      <Figure image={thing.image}></Figure>
-      <PreviewImage>
-        <div className="pic1"></div>
-        <div className="pic2"></div>
-        <div className="pic3"></div>
-      </PreviewImage>
-      <Buttons>
-        <ButtonNegative
-          onClick={() => {
-            props.history.push('/');
-          }}
-        >
-          Leave
-        </ButtonNegative>
-        <ButtonImportantAction
-          action={() => deleteThing({ variables: { id: id } })}
-        >
-          Delete
-        </ButtonImportantAction>
-        <ButtonPositive
-          onClick={() => {
-            props.history.push(`/edit/${id}`);
-          }}
-        >
-          Edit
-        </ButtonPositive>
-      </Buttons>
-    </Wrapper>
-  );
-};
-
-export default ThingPage;
