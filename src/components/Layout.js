@@ -49,7 +49,7 @@ const Main = styled.main`
   min-height: 100px;
   border-left: 1px solid black;
   flex: 1 1 auto;
-  overflow-y: scroll;
+  overflow-y: auto;
   ${'' /* padding-bottom: 1em; */}
   @media (max-width: 400px) {
     border-left: 0;

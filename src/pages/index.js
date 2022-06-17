@@ -20,9 +20,9 @@ import useUserContext from '../hooks/useUserContext';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { user, logIn, logOut } = useUserContext();
-  const { data } = useQuery(ME, {
+  useQuery(ME, {
     onCompleted: data => {
-      logIn(localStorage.getItem('token'), data.me);
+      if (!user) logIn(localStorage.getItem('token'), data.me);
     },
     onError: error => {
       logOut();
@@ -46,7 +46,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 const Pages = () => {
-
   return (
     <Router>
       <Switch>

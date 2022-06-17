@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { NEW_THING } from '../client/mutation';
 import { GET_THINGS } from '../client/query';
 import useAlert from '../hooks/useAlert';
-
 import FormThing from '../components/FormThing';
 import { NEGATIVE, POSITIVE } from '../const';
+
 const Wrapper = styled.div``;
 
 const NewThing = props => {
