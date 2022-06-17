@@ -4,21 +4,24 @@ import { SIGNUP_USER } from '../client/mutation';
 import { SET_IS_LOGGED_IN } from '../client/cache';
 import LayoutForm from '../components/LayoutForm';
 import useAlert from '../hooks/useAlert';
+import useUserContext from '../hooks/useUserContext';
 import { POSITIVE } from '../const';
 
 const SignUp = props => {
+  const { logIn } = useUserContext();
   useEffect(() => {
     document.title = 'Sign Up - ThingRating';
   }, []);
   const { setAlert } = useAlert();
   const [signUp, { client }] = useMutation(SIGNUP_USER, {
-    onCompleted: data => {
-      localStorage.setItem('token', data.signUp);
-      client.writeQuery({
-        query: SET_IS_LOGGED_IN,
-        data: { isLoggedIn: true }
-      });
-      setAlert('Hello newbie' , POSITIVE );
+    onCompleted: ({ signUp: { token, user } }) => {
+      // localStorage.setItem('token', data.signUp);
+      // client.writeQuery({
+      //   query: SET_IS_LOGGED_IN,
+      //   data: { isLoggedIn: true }
+      // });
+      logIn(token, user);
+      setAlert('Hello newbie', POSITIVE);
       props.history.push('/');
     },
     onError: error => {

@@ -10,7 +10,8 @@ import {
   createHttpLink
 } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
-import { AlertProvider } from './AlertContext';
+import { AlertProvider } from './context/AlertContext';
+import { UserProvider } from './context/UserContext';
 
 const uri = process.env.API_URI;
 const httpLink = createHttpLink({ uri });
@@ -39,7 +40,9 @@ const App = () => {
       <GlobalStyle />
       <AlertProvider>
         <Popup />
-        <Pages />
+        <UserProvider>
+          <Pages />
+        </UserProvider>
       </AlertProvider>
     </ApolloProvider>
   );

@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import logo from '../img/logo.svg';
-import { ME } from '../client/query';
+import useUserContext from '../hooks/useUserContext';
 
 const HeaderPage = styled.header`
   border-bottom: 2px solid black;
@@ -74,8 +74,7 @@ const Title = styled.div`
 `;
 
 const Header = props => {
-  const { data: dataMe } = useQuery(ME);
-  const isLoggedIn = dataMe && localStorage.getItem('token');
+  const { user } = useUserContext();
   return (
     <HeaderPage>
       <Cap>
@@ -88,10 +87,10 @@ const Header = props => {
         />
         <Title>
           <h1>Things Rating</h1>
-          <h3>Welcome , {isLoggedIn ? dataMe.me.name : 'Guest'} !</h3>
+          <h3>Welcome , {user ? user.name : 'Guest'} !</h3>
         </Title>
       </Cap>
-      <Navigation isLoggedIn={isLoggedIn} />
+      <Navigation isLoggedIn={!!user} />
     </HeaderPage>
   );
 };

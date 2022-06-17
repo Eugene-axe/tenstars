@@ -16,14 +16,24 @@ import ThingPage from './thing';
 import EditThing from './editThing';
 import { useQuery } from '@apollo/client';
 import { ME } from '../client/query';
+import useUserContext from '../hooks/useUserContext';
 
-const PrivateRoute = ({ component: Component, condition, ...rest }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const { user, logIn, logOut } = useUserContext();
+  const { data } = useQuery(ME, {
+    onCompleted: data => {
+      logIn(localStorage.getItem('token'), data.me);
+    },
+    onError: error => {
+      logOut();
+    }
+  });
 
   return (
     <Route
       {...rest}
       render={props =>
-        condition === true ? (
+        user ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -36,24 +46,11 @@ const PrivateRoute = ({ component: Component, condition, ...rest }) => {
 };
 
 const Pages = () => {
-  const [condition, setCondition] = useState(!!localStorage.getItem('token'));
-  const { data } = useQuery(ME, {
-    onCompleted: () => {
-      setCondition(true);
-    },
-    onError: error => {
-      localStorage.removeItem('token');
-      setCondition(false);
-    }
-  });
 
   return (
     <Router>
       <Switch>
-        <Route
-          path="/signin"
-          render={props => <SignIn setCondition={setCondition} {...props} />}
-        />
+        <Route path="/signin" render={props => <SignIn {...props} />} />
         <Route path="/signup" component={SignUp} />
         <Layout>
           <Route
@@ -64,17 +61,9 @@ const Pages = () => {
           />
           <Route path="/category/:id" component={Category} />
           <Route path="/thing/:id" component={ThingPage} />
-          <PrivateRoute path="/my" component={MyThings} condition={condition} />
-          <PrivateRoute
-            path="/new"
-            component={NewThing}
-            condition={condition}
-          />
-          <PrivateRoute
-            path="/edit/:id"
-            component={EditThing}
-            condition={condition}
-          />
+          <PrivateRoute path="/my" component={MyThings} />
+          <PrivateRoute path="/new" component={NewThing} />
+          <PrivateRoute path="/edit/:id" component={EditThing} />
         </Layout>
       </Switch>
     </Router>

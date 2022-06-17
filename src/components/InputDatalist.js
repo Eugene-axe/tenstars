@@ -69,10 +69,19 @@ const InputDatalist = props => {
             ref={titleCat}
             onChange={event => {
               setNewValue(event.target.value);
+            }}
+            onBlur={event => {
               validate({
                 name: 'titleCat',
                 value: event.target.value,
                 conditions: validateConditions || {}
+              });
+            }}
+            onFocus={() => {
+              validate({
+                name: 'titleCat',
+                value: event.target.value,
+                conditions: {}
               });
             }}
           />
