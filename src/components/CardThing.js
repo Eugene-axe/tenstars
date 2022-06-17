@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { withRouter } from 'react-router-dom';
@@ -6,14 +6,24 @@ import { useQuery } from '@apollo/client';
 import { GET_CATEGORY } from '../client/query';
 import { ThingImage, Star, StarActive } from './elements';
 
+const countCharsDependingWidth = elem => {
+  if (!elem) {
+    return 60;
+  }
+  const width = window.getComputedStyle(elem).width;
+  return (parseFloat(width) * 4) / 9;
+};
+
 const CardThing = props => {
   const { thing } = props;
   const { data: categoryData, loading } = useQuery(GET_CATEGORY, {
     variables: { id: thing.category[thing.category.length - 1] }
   });
+  const descriptionRef = useRef();
+  const countChars = countCharsDependingWidth(descriptionRef.current);
   const description =
-    thing.description.length > 60
-      ? thing.description.slice(0, 60) + '...'
+    thing.description.length > countChars
+      ? thing.description.slice(0, countChars) + '...'
       : thing.description;
   const nStarActive = Number(thing.rating);
   const nStar = 10 - nStarActive;
@@ -41,8 +51,8 @@ const CardThing = props => {
           {nStar > 0 &&
             new Array(nStar).fill(null).map((item, i) => <Star key={i} />)}
         </Rating>
-        <Description>
-          <p>{description || 'Descripton empty'}</p>
+        <Description ref={descriptionRef}>
+          <p>{description || 'Descripton empty'} </p>
         </Description>
         <Info>
           <span>By: {thing.author.username || 'unknown author'}</span>
@@ -108,9 +118,10 @@ const Description = styled.li`
   padding: 0.2em;
   flex: 3;
   overflow-y: hidden;
-
   p {
     line-height: 1.1;
+    max-height: 4.5em;
+    overflow: hidden;
   }
 `;
 
