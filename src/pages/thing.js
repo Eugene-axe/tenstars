@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_THING, GET_THINGS } from '../client/query';
+import { GET_MY_THINGS, GET_THING, GET_THINGS } from '../client/query';
 import { DELETE_THING } from '../client/mutation';
 import {
   ButtonNegative,
@@ -14,7 +14,9 @@ import BreadCrumbs from '../components/BreadCrumps';
 import defaultImg from '../img/picture.svg';
 import ThingLoader from '../components/loaders/thingLoader';
 import ButtonImportantAction from '../components/elements/ButtonImportantAction';
+import ModalImage from '../components/ModalImage';
 import useAlert from '../hooks/useAlert';
+import useModal from '../hooks/useModal';
 import { NEGATIVE, POSITIVE } from '../const';
 
 const getArrayNoLess3 = arr => {
@@ -31,8 +33,11 @@ const ThingPage = props => {
   useEffect(() => {
     document.title = 'Вещь - Thing Rating';
   }, []);
+
   const [imgMain, setImgMain] = useState('');
+  // const [isModalhide, setModalHide] = useState(true);
   const { setAlert } = useAlert();
+  const { setContent, setHide } = useModal();
   const [deleteThing] = useMutation(DELETE_THING, {
     onCompleted: data => {
       setAlert('Thing deleted', POSITIVE);
@@ -44,6 +49,12 @@ const ThingPage = props => {
     refetchQueries: [
       {
         query: GET_THINGS,
+        variables: {
+          category: ''
+        }
+      },
+      {
+        query: GET_MY_THINGS,
         variables: {
           category: ''
         }
@@ -89,7 +100,21 @@ const ThingPage = props => {
         <span>By: {thing.author.username}</span>
         <span>{date}</span>
       </Footer>
-      <Figure image={imgMain}></Figure>
+      <Figure
+        image={imgMain}
+        onClick={() => {
+          if (imgMain) {
+            setContent(
+              <ModalImage
+                setHide={setHide}
+                arrayImage={thing.images}
+                currentImage={imgMain}
+              />
+            );
+            setHide(false);
+          }
+        }}
+      ></Figure>
       <PreviewImage>
         {getArrayNoLess3(thing.images).map((src, i) => (
           <Minipic

@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import logo from '../img/logo.svg';

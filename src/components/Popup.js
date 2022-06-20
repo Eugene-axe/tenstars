@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import useAlert from '../hooks/useAlert';
 import { POSITIVE, NEGATIVE, NEUTRAL } from '../const';
 import { falls } from './styled/keyframes';

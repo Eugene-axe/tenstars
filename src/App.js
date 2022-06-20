@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Pages from './pages';
 import Popup from './components/Popup';
+import ModalWindow from './components/ModalWindow';
 import GlobalStyle from './components/GlobalStyle';
 import {
   ApolloClient,
@@ -12,6 +13,7 @@ import {
 import { setContext } from 'apollo-link-context';
 import { AlertProvider } from './context/AlertContext';
 import { UserProvider } from './context/UserContext';
+import { ModalProvider } from './context/ModalContext';
 
 const uri = process.env.API_URI;
 const httpLink = createHttpLink({ uri });
@@ -39,10 +41,13 @@ const App = () => {
     <ApolloProvider client={client}>
       <GlobalStyle />
       <AlertProvider>
-        <Popup />
-        <UserProvider>
-          <Pages />
-        </UserProvider>
+        <ModalProvider>
+          <ModalWindow />
+          <Popup />
+          <UserProvider>
+            <Pages />
+          </UserProvider>
+        </ModalProvider>
       </AlertProvider>
     </ApolloProvider>
   );
