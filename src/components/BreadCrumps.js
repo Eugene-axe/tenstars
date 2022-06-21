@@ -9,6 +9,7 @@ export const Wrapper = styled.ul`
   list-style-type: none;
   display: flex;
   margin: 1em;
+  font-size: calc(0.5vw + 0.6em);
 `;
 export const Item = styled.li`
   cursor: pointer;

@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { withRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_CATEGORY } from '../client/query';
 import { ThingImage, Star, StarActive } from './elements';
+import PublicIcon from './PublicIcon';
 
 const countCharsDependingWidth = elem => {
   if (!elem) {
@@ -35,6 +36,9 @@ const CardThing = props => {
       }}
     >
       <ImageContainer>
+        <PublicContainer>
+          <PublicIcon public={thing.public} />
+        </PublicContainer>
         <ThingImage
           categoryName={loading ? 'loading...' : categoryData?.category.title}
           image={thing.images[0]}
@@ -86,6 +90,7 @@ const Card = styled.div`
   }
 `;
 const ImageContainer = styled.div`
+  position: relative;
   flex: 1 1 50%;
   border-top-left-radius: 0.4em;
   border-top-right-radius: 0.4em;
@@ -96,6 +101,14 @@ const Title = styled.h2`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+const PublicContainer = styled.div`
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+  width: 2em;
+  height: 2em;
+  z-index: 2;
 `;
 const List = styled.ul`
   flex: 1 0 50%;
