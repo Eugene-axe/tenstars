@@ -49,9 +49,9 @@ const ModalImage = props => {
     const endX = Math.round(event.changedTouches[0].clientX);
     const endY = Math.round(event.changedTouches[0].clientY);
     if (startX - endX > 100) changeImage(1);
-    if (startX - endX < -250) changeImage(-1);
+    if (startX - endX < -100) changeImage(-1);
     const diffY = startY - endY;
-    if (diffY > 250 || diffY < -250) {
+    if (diffY > 150 || diffY < -150) {
       const direction = diffY > 0 ? -1 : 1;
       setCoordImg(`top : ${200 * direction}% `);
       setTimeout(() => {
