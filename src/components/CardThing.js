@@ -118,6 +118,7 @@ const Description = styled.li`
   padding: 0.2em;
   flex: 3;
   overflow-y: hidden;
+  white-space: pre-line;
   p {
     line-height: 1.1;
     max-height: 4.5em;

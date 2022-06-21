@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ButtonWrapper } from './styled/additionalStyles';
 
@@ -14,21 +14,63 @@ const walkArray = (array, image, increment = 0) => {
 
 const ModalImage = props => {
   const { setHide, arrayImage, currentImage } = props;
-
   const [image, setImage] = useState(currentImage);
+
+  useEffect(() => {
+    setCoordImg('top: 0% ; left: 0% ');
+  }, [image]);
+
+  const [startX, setStartX] = useState();
+  const [startY, setStartY] = useState();
+  const [coordImg, setCoordImg] = useState('top : -150%');
 
   const closeModal = () => {
     setHide(true);
   };
 
   const changeImage = increment => {
-    setImage(walkArray(arrayImage, image, increment));
+    setCoordImg(`left : ${-increment * 300}%`);
+    setTimeout(() => {
+      setCoordImg('top : -200%');
+    }, 300);
+    setTimeout(() => {
+      setImage(walkArray(arrayImage, image, increment));
+    }, 350);
   };
 
+  const touchStart = event => {
+    const startX = Math.round(event.changedTouches[0].clientX);
+    setStartX(startX);
+    const startY = Math.round(event.changedTouches[0].clientY);
+    setStartY(startY);
+  };
+
+  const touchEnd = event => {
+    const endX = Math.round(event.changedTouches[0].clientX);
+    const endY = Math.round(event.changedTouches[0].clientY);
+    if (startX - endX > 100) changeImage(1);
+    if (startX - endX < -250) changeImage(-1);
+    const diffY = startY - endY;
+    if (diffY > 250 || diffY < -250) {
+      const direction = diffY > 0 ? -1 : 1;
+      setCoordImg(`top : ${200 * direction}% `);
+      setTimeout(() => {
+        closeModal();
+      }, 300);
+    }
+  };
+
+  const dragStart = event => {
+    event.preventDefault();
+  };
   return (
     <Wrapper>
-      <ImgContainer>
-        <img src={image} />
+      <ImgContainer
+        onTouchStart={touchStart}
+        onTouchEnd={touchEnd}
+        coord={coordImg}
+      >
+        <img src={image} draggable={true} onDragStart={dragStart} />
       </ImgContainer>
       <BtnContainer>
         <Arrow
@@ -80,6 +122,9 @@ const ImgContainer = styled.div`
     width: 100%;
     object-fit: contain;
     box-shadow: 0px 0px 15px black;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    ${({ coord }) => coord};
   }
 `;
 
@@ -91,6 +136,9 @@ const BtnContainer = styled.div`
   align-items: center;
   width: 80%;
   max-width: 20em;
+  @media (max-width: 500px) {
+    display: none;
+  }
 `;
 
 const ButtonClose = styled.button`

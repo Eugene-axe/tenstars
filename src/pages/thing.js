@@ -253,6 +253,7 @@ const Description = styled.div`
   padding: 0.5em;
   min-height: 5em;
   overflow: hidden;
+  white-space: pre-line;
 `;
 const Footer = styled.div`
   grid-area: footer;
