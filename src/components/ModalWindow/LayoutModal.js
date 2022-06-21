@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ButtonNegative } from '../elements';
 
-const ModalImg = ({ children }) => {
+const ModalImg = ({ children, opacity, time }) => {
+  console.log('opacity', `${opacity} + 8`);
+  console.log('time', `${time} + 8`);
+
   return (
-    <Layout>
+    <Layout opacity={opacity} time={time}>
       <Wrapper>{children}</Wrapper>
     </Layout>
   );
@@ -23,6 +25,8 @@ const Layout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: opacity ${({ time }) => time / 1000}s ease-in;
+  opacity: ${({ opacity }) => opacity};
 `;
 
 const Wrapper = styled.div`

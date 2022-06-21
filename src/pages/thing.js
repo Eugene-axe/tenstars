@@ -35,9 +35,8 @@ const ThingPage = props => {
   }, []);
 
   const [imgMain, setImgMain] = useState('');
-  // const [isModalhide, setModalHide] = useState(true);
   const { setAlert } = useAlert();
-  const { setContent, setHide } = useModal();
+  const { setContent, closeModal, openModal } = useModal();
   const [deleteThing] = useMutation(DELETE_THING, {
     onCompleted: data => {
       setAlert('Thing deleted', POSITIVE);
@@ -106,12 +105,12 @@ const ThingPage = props => {
           if (imgMain) {
             setContent(
               <ModalImage
-                setHide={setHide}
+                closeModal={closeModal}
                 arrayImage={thing.images}
                 currentImage={imgMain}
               />
             );
-            setHide(false);
+            openModal();
           }
         }}
       ></Figure>

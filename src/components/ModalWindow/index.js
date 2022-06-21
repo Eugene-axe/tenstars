@@ -3,9 +3,14 @@ import LayoutModal from './LayoutModal';
 import useModal from '../../hooks/useModal';
 
 const ModalWindow = props => {
-  const { isHide, content } = useModal();
+  const { isHide, opacity, APPEARANCE_TIME, content } = useModal();
+
   if (isHide) return <></>;
-  return <LayoutModal>{content}</LayoutModal>;
+  return (
+    <LayoutModal opacity={opacity} time={APPEARANCE_TIME}>
+      {content}
+    </LayoutModal>
+  );
 };
 
 export default ModalWindow;

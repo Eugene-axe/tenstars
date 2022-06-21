@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
 import styled from 'styled-components';
 import { ButtonAsLink, ButtonNegative } from './elements';
@@ -142,13 +142,13 @@ const Navigation = props => {
         }}
       >
         <li>
-          <Link to="/">Home</Link>
+          <NavLink to="/">Home</NavLink>
         </li>
         <li>
-          <Link to="/my">My Things</Link>
+          <NavLink to="/my">My Things</NavLink>
         </li>
         <li>
-          <Link to="/new">New</Link>
+          <NavLink to="/new">New</NavLink>
         </li>
         {props.isLoggedIn ? (
           <li className="last">
@@ -157,10 +157,10 @@ const Navigation = props => {
         ) : (
           <>
             <li className="last">
-              <Link to="/signin">Sign In</Link>
+              <NavLink to="/signin">Sign In</NavLink>
             </li>
             <li>
-              <Link to="/signup">Sign Up</Link>
+              <NavLink to="/signup">Sign Up</NavLink>
             </li>
           </>
         )}

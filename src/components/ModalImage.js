@@ -6,14 +6,13 @@ const walkArray = (array, image, increment = 0) => {
   const index = array.findIndex(item => {
     return item === image;
   });
-  console.log({ array, index, increment });
   if (index + +increment >= array.length) return array[0];
   if (index + +increment < 0) return array[array.length - 1];
   return array[index + +increment];
 };
 
 const ModalImage = props => {
-  const { setHide, arrayImage, currentImage } = props;
+  const { closeModal, arrayImage, currentImage } = props;
   const [image, setImage] = useState(currentImage);
 
   useEffect(() => {
@@ -24,14 +23,11 @@ const ModalImage = props => {
   const [startY, setStartY] = useState();
   const [coordImg, setCoordImg] = useState('top : -150%');
 
-  const closeModal = () => {
-    setHide(true);
-  };
 
   const changeImage = increment => {
-    setCoordImg(`left : ${-increment * 300}%`);
+    setCoordImg(`left : ${increment * 100}vw`);
     setTimeout(() => {
-      setCoordImg('top : -200%');
+      setCoordImg('top : -100vh');
     }, 300);
     setTimeout(() => {
       setImage(walkArray(arrayImage, image, increment));
@@ -39,6 +35,7 @@ const ModalImage = props => {
   };
 
   const touchStart = event => {
+    console.dir(event.target);
     const startX = Math.round(event.changedTouches[0].clientX);
     setStartX(startX);
     const startY = Math.round(event.changedTouches[0].clientY);
@@ -48,12 +45,12 @@ const ModalImage = props => {
   const touchEnd = event => {
     const endX = Math.round(event.changedTouches[0].clientX);
     const endY = Math.round(event.changedTouches[0].clientY);
-    if (startX - endX > 100) changeImage(1);
-    if (startX - endX < -100) changeImage(-1);
+    if (startX - endX < -100) changeImage(1);
+    if (startX - endX > 100) changeImage(-1);
     const diffY = startY - endY;
     if (diffY > 150 || diffY < -150) {
       const direction = diffY > 0 ? -1 : 1;
-      setCoordImg(`top : ${200 * direction}% `);
+      setCoordImg(`top : ${direction*100}vh `);
       setTimeout(() => {
         closeModal();
       }, 300);
