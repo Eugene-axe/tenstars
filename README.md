@@ -11,8 +11,8 @@
 **Backend** 
 - Выполнен на node.js
 - фреимфорк express.js
-- Backend api размещен на Heroku 
-- Apollo GraphQL - способ обработки запросов  (Apollo Server)
+- Backend api размещен на ~~ Heroku ~~ (после того как Heroku стал платным переехал на Railway и работает 21 день в месяц) 
+- GraphQL - способ обработки запросов  (Apollo Server)
 
 **Frontend**
 - Выполнен на библиотеке React 
@@ -50,3 +50,10 @@
  - [ ] панель поиска и сортировки
  - [ ] Service Worker
  - [ ] Интернационализация
+
+Сервер иногда не работает (так как бесплатный ), поэтому приложу скрины, что бы было если б он работал: ![image](https://user-images.githubusercontent.com/64367189/224029856-bfa6ec6b-3acc-48ab-abb5-de35d920b222.png)
+![image](https://user-images.githubusercontent.com/64367189/224031071-0eb336a9-f0dc-48f8-823b-ede1774d4ea8.png)
+![image](https://user-images.githubusercontent.com/64367189/224031266-f835bc71-5c03-44ab-9534-190c34b34f80.png)![image](https://user-images.githubusercontent.com/64367189/224031450-815a9fa3-aaeb-406e-b638-1d67071d1d55.png)
+
+
+
